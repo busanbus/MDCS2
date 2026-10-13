@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>운행전 자가점검시스템</title>
+
+<!-- 기본 메타 태그 -->
+<meta name="description" content="부산 세진여객 운전기사 운행전 자가점검시스템">
+<meta name="theme-color" content="#3182F6">
+
+<!-- PWA 메타 태그 (주석처리) -->
+<!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+<!-- <meta name="apple-mobile-web-app-status-bar-style" content="default"> -->
+<!-- <meta name="apple-mobile-web-app-title" content="세진여객 점검"> -->
+
+<!-- PWA 아이콘 (주석처리) -->
+<!-- <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png"> -->
+<!-- <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png"> -->
+<!-- <link rel="apple-touch-icon" href="/icons/icon-192x192.png"> -->
+<!-- <link rel="manifest" href="/manifest.json"> -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css?v=20261013a">
+</head>
+<body>
+
+<!-- ======== 스플래시 ======== -->
+<div id="splash" class="splash-overlay">
+  <div class="splash-content">
+    <div class="splash-logo-wrap">
+      <img src="logo1.png" alt="MDCS 로고">
+    </div>
+    <div class="splash-title">MDCS</div>
+    <div class="splash-subtitle splash-subtitle-kr">운행 전 자가점검시스템</div>
+    <div class="splash-subtitle">(Mobile Drive Pre-Care System)</div>
+  </div>
+</div>
+
+<!-- ======== 상단 내비게이션 (header.js) ======== -->
+<div id="header-container"></div>
+
+<!-- ======== 메인 화면 ======== -->
+<section id="p-landing" class="page" data-nav="brand">
+  <div class="landing">
+    <div class="landing-greeting">
+      <p id="landing-date" class="landing-date"></p>
+      <h1 id="landing-hello" class="landing-hello">안녕하세요,<br>기사님</h1>
+    </div>
+
+    <div class="banner">
+      <img src="images/mdcs-banner-163e86.jpg" alt="안전하고 친절한 운행의 시작! 모바일 운행전 점검시스템 MDCS">
+    </div>
+
+    <section class="section-card" aria-labelledby="notice-heading">
+      <div class="list-header">
+        <h2 id="notice-heading" class="list-header-title">공지사항</h2>
+        <button id="notice-board-open" class="icon-btn" type="button" aria-label="공지사항 전체 보기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <ul id="landing-notice-list" class="list"></ul>
+    </section>
+  </div>
+
+  <div class="bottom-cta">
+    <button id="landing-start-btn" class="btn btn-primary" type="button">자가점검 시작하기</button>
+  </div>
+</section>
+
+<!-- ======== 공지사항 전체 ======== -->
+<section id="p-board" class="page" data-nav="back" data-title="공지사항" data-tone="grey">
+  <div class="landing">
+    <section class="section-card">
+      <ul id="board-notice-list" class="list"></ul>
+    </section>
+  </div>
+</section>
+
+<!-- ======== 기사님 이름 ======== -->
+<section id="p-driver-name" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/id-card.png" alt="">
+    <h1 class="top-title">기사님 성함을<br>알려주세요</h1>
+    <p class="top-desc">처음 한 번만 입력하면 다음부터는 바로 시작해요.</p>
+  </div>
+  <div class="step-body">
+    <label class="field">
+      <span class="field-label">이름</span>
+      <input id="driver-name-input" class="field-input" type="text" placeholder="예) 홍길동" maxlength="20" autocomplete="off">
+    </label>
+  </div>
+  <div class="bottom-cta">
+    <button id="driver-name-submit" class="btn btn-primary" type="button" disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 1단계 : 근무지 ======== -->
+<section id="p0" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/bus_illustration.png" alt="">
+    <p class="top-eyebrow">1 / 8</p>
+    <h1 class="top-title">오늘 근무하는 곳을<br>선택해 주세요</h1>
+  </div>
+  <div class="step-body">
+    <div id="site-options" class="option-grid cols-2">
+      <button class="option-tile tall" type="button" data-value="노포" aria-pressed="false">노포</button>
+      <button class="option-tile tall" type="button" data-value="정관" aria-pressed="false">정관</button>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 2단계 : 노선 ======== -->
+<section id="p1" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/route.png" alt="">
+    <p class="top-eyebrow">2 / 8</p>
+    <h1 class="top-title">운행할 노선을<br>선택해 주세요</h1>
+  </div>
+  <div class="step-body">
+    <div id="busno-options" class="option-grid cols-3"></div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 3단계 : 차량번호 ======== -->
+<section id="p2" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/plate-number.png" alt="">
+    <p class="top-eyebrow">3 / 8</p>
+    <h1 class="top-title">운행할 차량번호를<br>선택해 주세요</h1>
+  </div>
+  <div class="step-body">
+    <div class="search-wrap">
+      <label class="search-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="plate-filter" class="field-input" type="text" inputmode="numeric" maxlength="4" placeholder="차량번호 숫자로 검색" autocomplete="off" aria-label="차량번호 검색">
+      </label>
+    </div>
+    <div id="plate-recent" hidden>
+      <p class="section-label">최근 선택</p>
+      <div id="plate-recent-grid" class="option-grid cols-3"></div>
+    </div>
+    <p id="plate-all-label" class="section-label">전체 차량</p>
+    <div id="plate-grid" class="option-grid cols-3"></div>
+    <p id="plate-empty" class="empty-state" hidden>검색한 차량번호가 없어요.</p>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 4단계 : 복장 ======== -->
+<section id="p3" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/uniform.png" alt="">
+    <p class="top-eyebrow">4 / 8</p>
+    <h1 class="top-title">복장 상태는<br>어떤가요?</h1>
+  </div>
+  <div class="step-body">
+    <div id="uniform-options" class="option-list">
+      <button class="option-row" type="button" data-value="ok" aria-pressed="false">양호해요<span class="radio" aria-hidden="true"></span></button>
+      <button class="option-row" type="button" data-value="bad" aria-pressed="false">불량이에요<span class="radio" aria-hidden="true"></span></button>
+    </div>
+    <div id="uniform-reason-wrap" class="reveal" hidden>
+      <label class="field">
+        <span class="field-label">어떤 점이 불량인가요?</span>
+        <textarea id="reason-input" class="field-input field-textarea" rows="3" maxlength="100" placeholder="예) 넥타이를 착용하지 못했어요" autocomplete="off"></textarea>
+        <span id="reason-counter" class="field-counter">0 / 100</span>
+      </label>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 5단계 : 건강 ======== -->
+<section id="p4" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/health.png" alt="">
+    <p class="top-eyebrow">5 / 8</p>
+    <h1 class="top-title">오늘 몸 상태는<br>어떤가요?</h1>
+  </div>
+  <div class="step-body">
+    <div id="health-options" class="option-list">
+      <button class="option-row" type="button" data-value="ok" aria-pressed="false">양호해요<span class="radio" aria-hidden="true"></span></button>
+      <button class="option-row" type="button" data-value="symptom" aria-pressed="false">증상이 있어요<span class="radio" aria-hidden="true"></span></button>
+    </div>
+    <div id="health-detail-wrap" class="reveal" hidden>
+      <p class="section-label">어떤 증상인가요?</p>
+      <div id="health-chips" class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-value="몸살" aria-pressed="false">몸살</button>
+        <button class="option-tile compact" type="button" data-value="감기" aria-pressed="false">감기</button>
+        <button class="option-tile compact" type="button" data-value="장염" aria-pressed="false">장염</button>
+        <button class="option-tile compact" type="button" data-value="기타" aria-pressed="false">기타</button>
+      </div>
+      <label id="health-custom-wrap" class="field reveal" hidden>
+        <span class="field-label">증상을 적어 주세요</span>
+        <textarea id="health-custom" class="field-input field-textarea" rows="3" maxlength="100" placeholder="예) 두통이 있어요" autocomplete="off"></textarea>
+        <span id="health-counter" class="field-counter">0 / 100</span>
+      </label>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 6단계 : 음주 ======== -->
+<section id="p5" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/no-drinks.png" alt="">
+    <p class="top-eyebrow">6 / 8</p>
+    <h1 class="top-title">24시간 안에<br>술을 마셨나요?</h1>
+  </div>
+  <div class="step-body">
+    <div id="alcohol-options" class="option-list">
+      <button class="option-row" type="button" data-value="no" aria-pressed="false">아니요, 마시지 않았어요<span class="radio" aria-hidden="true"></span></button>
+      <button class="option-row danger" type="button" data-value="yes" aria-pressed="false">예, 마셨어요<span class="radio" aria-hidden="true"></span></button>
+    </div>
+    <div id="alcohol-warning" class="callout danger reveal" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <div>
+        <p class="callout-title">반드시 관리자에게 알려 주세요</p>
+        <p class="callout-desc">관리자에게 문의한 뒤 음주 측정을 진행해 주세요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 7단계 : 차량 내부 관리 실태 ======== -->
+<section id="p6" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/bus_illustration.png" alt="">
+    <p class="top-eyebrow">7 / 8</p>
+    <h1 class="top-title">차량 내부 관리 실태를<br>확인해 주세요</h1>
+  </div>
+  <div id="vehicle-checks" class="step-body check-list">
+    <div class="check-item" data-check="cctv">
+      <p class="check-item-title"><span class="check-item-no">1</span>CCTV 작동 및 관리상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="cctv" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="cctv" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="cctv" rows="2" maxlength="100" placeholder="예) 화면이 나오지 않아요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="cctv" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="cctv" hidden>
+            <img alt="CCTV 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="cctv">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="terminal">
+      <p class="check-item-title"><span class="check-item-no">2</span>단말기 작동 상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="terminal" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="terminal" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="terminal" rows="2" maxlength="100" placeholder="예) 단말기가 켜지지 않아요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="terminal" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="terminal" hidden>
+            <img alt="단말기 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="terminal">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="energy">
+      <p class="check-item-title"><span class="check-item-no">3</span>에너지(배터리, CNG) 잔여량</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="energy" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="energy" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="energy" rows="2" maxlength="100" placeholder="예) CNG가 거의 없어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="energy" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="energy" hidden>
+            <img alt="에너지 잔여량 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="energy">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="dashboard">
+      <p class="check-item-title"><span class="check-item-no">4</span>계기판(경고등)</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="dashboard" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="dashboard" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="dashboard" rows="2" maxlength="100" placeholder="예) 경고등이 켜져 있어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="dashboard" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="dashboard" hidden>
+            <img alt="계기판 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="dashboard">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="suspension">
+      <p class="check-item-title"><span class="check-item-no">5</span>에어서스펜션 상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="suspension" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="suspension" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="suspension" rows="2" maxlength="100" placeholder="예) 한쪽이 내려가 있어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="suspension" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="suspension" hidden>
+            <img alt="에어서스펜션 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="suspension">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="etc">
+      <p class="check-item-title"><span class="check-item-no">6</span>기타</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="etc" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="etc" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="etc" rows="2" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="etc" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="etc" hidden>
+            <img alt="기타 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="etc">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 8단계 : 차량 외부 관리 실태 ======== -->
+<section id="p7" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <img class="top-asset" src="images/bus_illustration.png" alt="">
+    <p class="top-eyebrow">8 / 8</p>
+    <h1 class="top-title">차량 외부 관리 실태를<br>확인해 주세요</h1>
+  </div>
+  <div id="exterior-checks" class="step-body check-list">
+    <div class="check-item" data-check="accident">
+      <p class="check-item-title"><span class="check-item-no">1</span>외부 사고 흔적 유무</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="accident" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="accident" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="accident" rows="2" maxlength="100" placeholder="예) 왼쪽 문에 긁힌 자국이 있어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="accident" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="accident" hidden>
+            <img alt="외부 사고 흔적 사진">
+            <button class="text-btn" type="button" data-photo-clear="accident">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="tire">
+      <p class="check-item-title"><span class="check-item-no">2</span>타이어 공기압 및 상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="tire" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="tire" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="tire" rows="2" maxlength="100" placeholder="예) 앞바퀴 공기가 부족해요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="tire" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="tire" hidden>
+            <img alt="타이어 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="tire">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="wiper">
+      <p class="check-item-title"><span class="check-item-no">3</span>와이퍼 작동상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="wiper" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="wiper" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="wiper" rows="2" maxlength="100" placeholder="예) 와이퍼가 잘 움직이지 않아요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="wiper" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="wiper" hidden>
+            <img alt="와이퍼 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="wiper">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="etc">
+      <p class="check-item-title"><span class="check-item-no">4</span>기타</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="etc" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="etc" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="etc" rows="2" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="etc" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="etc" hidden>
+            <img alt="기타 외부 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="etc">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="exterior-alert" class="callout danger" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <div>
+        <p id="exterior-alert-title" class="callout-title"></p>
+        <p id="exterior-alert-desc" class="callout-desc"></p>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 제출 전 확인 ======== -->
+<section id="p-review" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <h1 class="top-title">제출하기 전에<br>확인해 주세요</h1>
+    <p class="top-desc">고칠 내용이 있으면 '수정'을 눌러 주세요.</p>
+  </div>
+  <div class="step-body">
+    <ul id="review-list" class="review-list"></ul>
+  </div>
+  <div class="bottom-cta">
+    <button id="submit-btn" class="btn btn-primary" type="button">제출하기</button>
+    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+  </div>
+</section>
+
+<!-- ======== 완료 ======== -->
+<section id="done" class="page" data-nav="brand">
+  <div class="result">
+    <svg class="result-icon" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="44"/><path d="M27 45l11 11 23-24"/></svg>
+    <h1 class="result-title">점검을 마쳤어요</h1>
+    <p class="result-desc">오늘도 안전 운행하세요.</p>
+    <dl id="result-card" class="result-card"></dl>
+    <div id="done-alert" class="callout danger" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <div>
+        <p class="callout-title">운행 전에 관리자에게 알려 주세요</p>
+        <p class="callout-desc">24시간 안에 음주했다고 답했어요. 음주 측정을 진행해 주세요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <button id="done-home-btn" class="btn btn-primary" type="button">처음으로</button>
+  </div>
+</section>
+
+<!-- ======== 공지 이미지 보기 ======== -->
+<div id="notice-viewer" class="viewer" role="dialog" aria-modal="true" aria-labelledby="notice-viewer-title" hidden>
+  <div class="viewer-bar">
+    <button id="notice-viewer-close" class="icon-btn" type="button" aria-label="닫기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p id="notice-viewer-title" class="viewer-title"></p>
+    <span class="icon-btn-spacer" aria-hidden="true"></span>
+  </div>
+  <div id="notice-viewer-body" class="viewer-body"></div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="header.js?v=20261012f"></script>
+<script src="app.js?v=20261013a"></script>
+</body>
+</html>

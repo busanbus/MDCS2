@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MDCS 사용 가이드</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="guide-styles.css">
+</head>
+<body>
+
+<!-- 가이드 페이지 컨테이너 -->
+<div class="guide-container">
+  
+  <!-- 1. 기사님 이름 입력 가이드 -->
+  <section class="guide-page" data-step="0">
+    <div class="guide-header">
+      <h1>운행전 자가점검시스템 사용 가이드</h1>
+      <h1 class="step-indicator">1단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/02-driver-name.png" alt="기사님 이름 입력" class="screenshot" onerror="this.src='images/id-card.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>기사님 성함 입력</h2>
+        <p>처음 사용하시는 경우 이름을 입력해주세요.</p>
+        <ol>
+          <li>이름 입력란에 <strong>본인의 성함</strong>을 입력합니다.</li>
+          <li>이름을 입력하면 <strong>"다음"</strong> 버튼이 활성화됩니다.</li>
+          <li>입력한 이름은 자동으로 저장되어 다음번에는 이 단계를 건너뛸 수 있습니다.</li>
+        </ol>
+        <p class="tip">💡 한 번 입력하면 다음부터는 근무지 선택부터 시작됩니다.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 2. 근무지 선택 가이드 -->
+  <section class="guide-page" data-step="1">
+    <div class="guide-header">
+      <h1 class="step-indicator">2단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/03-site-selection.png" alt="근무지 선택" class="screenshot" onerror="this.src='images/bus_illustration.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>근무지 선택</h2>
+        <p>오늘 근무하는 근무지를 선택해주세요.</p>
+        <ol>
+          <li><strong>노포</strong>: 노포 근무지를 선택합니다.</li>
+          <li><strong>정관</strong>: 정관 근무지를 선택합니다.</li>
+        </ol>
+        <p>선택 후 확인 모달이 나타나며, 확인을 누르면 다음 단계로 진행됩니다.</p>
+        <p class="tip">💡 잘못 선택하셨다면 "아니오"를 눌러 다시 선택할 수 있습니다.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 3. 노선번호 선택 가이드 -->
+  <section class="guide-page" data-step="2">
+    <div class="guide-header">
+      <h1 class="step-indicator">3단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/04-route-selection.png" alt="노선번호 선택" class="screenshot" onerror="this.src='images/route.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>노선번호 선택</h2>
+        <p>오늘 운행하는 노선번호를 선택해주세요.</p>
+        <ol>
+          <li>선택한 근무지에 따라 <strong>사용 가능한 노선번호</strong>가 표시됩니다.</li>
+          <li>해당하는 노선번호 버튼을 눌러 선택합니다.</li>
+          <li>선택 후 확인 모달에서 확인을 누르면 다음 단계로 진행됩니다.</li>
+        </ol>
+        <p class="tip">💡 노선번호는 근무지에 따라 다르게 표시됩니다.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 4. 차량번호 선택 가이드 -->
+  <section class="guide-page" data-step="3">
+    <div class="guide-header">
+      <h1 class="step-indicator">4단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/05-plate-selection.png" alt="차량번호 선택" class="screenshot" onerror="this.src='images/plate-number.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>차량번호 선택</h2>
+        <p>오늘 운행하는 차량의 번호를 선택해주세요.</p>
+        <ol>
+          <li><strong>검색 기능</strong>: 상단 검색창에 숫자를 입력하면 해당 번호로 필터링됩니다.</li>
+          <li><strong>2열 그리드</strong>: 차량번호가 2열로 표시되며, 스크롤하여 더 많은 번호를 볼 수 있습니다.</li>
+          <li>해당하는 차량번호 버튼을 눌러 선택합니다.</li>
+          <li>선택 후 확인 모달에서 확인을 누르면 다음 단계로 진행됩니다.</li>
+        </ol>
+        <p class="tip">💡 차량번호는 숫자로 검색할 수 있습니다. 예: "3101" 입력 시 3101번 차량이 표시됩니다.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 5. 복장 상태 확인 가이드 -->
+  <section class="guide-page" data-step="4">
+    <div class="guide-header">
+      <h1 class="step-indicator">5단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/06-uniform-check.png" alt="복장 상태 확인" class="screenshot" onerror="this.src='images/uniform.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>복장 상태 확인</h2>
+        <p>거울을 통해 복장 상태를 확인하고 선택해주세요.</p>
+        <ol>
+          <li><strong>양호</strong>: 복장이 단정하고 규정에 맞는 경우 선택합니다.</li>
+          <li><strong>불량</strong>: 복장에 문제가 있는 경우 선택합니다.</li>
+        </ol>
+        <p>불량을 선택하시면 불량 사유를 입력하는 화면이 나타납니다. 사유를 입력한 후 확인을 누르면 다음 단계로 진행됩니다.</p>
+        <p class="tip">💡 복장 상태는 거울을 통해 직접 확인하신 후 선택해주세요.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 6. 건강 상태 확인 가이드 -->
+  <section class="guide-page" data-step="5">
+    <div class="guide-header">
+      <h1 class="step-indicator">6단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/07-health-check.png" alt="건강 상태 확인" class="screenshot" onerror="this.src='images/health.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>건강 상태 확인</h2>
+        <p>현재 몸 상태를 확인하고 선택해주세요.</p>
+        <ol>
+          <li><strong>양호</strong>: 건강 상태가 양호한 경우 선택합니다.</li>
+          <li><strong>증상 있음</strong>: 몸에 증상이 있는 경우 선택합니다.</li>
+        </ol>
+        <p>증상 있음을 선택하시면 증상 선택 화면이 나타납니다. 몸살, 감기, 장염 중 선택하거나 "기타"를 선택하여 직접 입력할 수 있습니다.</p>
+        <p class="tip">💡 건강 상태는 안전 운행을 위해 정확하게 선택해주세요.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 7. 음주 여부 확인 가이드 -->
+  <section class="guide-page" data-step="6">
+    <div class="guide-header">
+      <h1 class="step-indicator">7단계</h1>
+    </div>
+    
+    <div class="guide-content">
+      <div class="screenshot-container">
+        <img src="guide-images/08-alcohol-check.png" alt="음주 여부 확인" class="screenshot" onerror="this.src='images/no-drinks.png'">
+      </div>
+      
+      <div class="guide-description">
+        <h2>24시간 이내 음주 여부</h2>
+        <p>24시간 이내에 음주를 하셨는지 선택해주세요.</p>
+        <ol>
+          <li><strong>예</strong>: 24시간 이내에 음주를 하신 경우 선택합니다.</li>
+          <li><strong>아니오</strong>: 24시간 이내에 음주를 하지 않으신 경우 선택합니다.</li>
+        </ol>
+        <p>"예"를 선택하시면 경고 메시지가 나타나며, 반드시 관리자에게 문의 후 음주 측정을 진행해야 합니다.</p>
+        <p class="tip">⚠️ 음주 운전은 절대 금지입니다. 정확하게 선택해주세요.</p>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- 8. 제출 완료 가이드 -->
+  <section class="guide-page" data-step="7">
+    <div class="guide-content">
+      <div class="guide-description">
+        <h1 text-align="center">제출 완료</h1>
+        <p>모든 자가점검이 완료되었습니다!</p>
+        <ol>
+          <li>✅ 제출 완료 메시지가 표시됩니다.</li>
+          <li>입력하신 모든 정보가 서버로 전송되었습니다.</li>
+          <li>안전 운행 하시기 바랍니다.</li>
+        </ol>
+        <p class="tip">💡 자가점검은 매일 운행 전에 반드시 진행해주세요.</p>
+        
+        <div class="guide-complete-section">
+          <button class="complete-btn" onclick="window.location.href='index.html'">자가점검 시작하기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="guide.js"></script>
+</body>
+</html>
+

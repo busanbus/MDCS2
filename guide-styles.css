@@ -1,0 +1,249 @@
+/* 가이드 페이지 스타일 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --bg: #f9fafb;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.guide-container {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  margin-top: 1rem; /* 추가 여백 */
+}
+
+.guide-page {
+  display: flex;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  flex-direction: column;
+}
+
+.guide-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.guide-header h1:not(.step-indicator) {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.step-indicator {
+  font-size: 1.08rem;
+  color: var(--text-light);
+  font-weight: 500;
+  margin: 0;
+}
+
+.guide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.screenshot-container {
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screenshot {
+  max-width: 87%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.guide-description {
+  flex: 1;
+}
+
+.guide-description h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.guide-description > p {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.guide-description ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.guide-description ol li {
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+
+.guide-description ol li strong {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.tip {
+  background: #eff6ff;
+  border-left: 4px solid var(--primary);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.guide-navigation {
+  display: none; /* 스크롤 페이지로 변경하여 네비게이션 버튼 숨김 */
+}
+
+.guide-complete-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+.complete-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.25rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--primary);
+  color: white;
+  min-height: 64px;
+}
+
+.complete-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 52px;
+}
+
+.prev-btn {
+  background: #e5e7eb;
+  color: #000000;
+}
+
+.prev-btn:hover:not(:disabled) {
+  background: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.prev-btn:disabled {
+  background: #f3f4f6;
+  color: #bdbdbd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.next-btn {
+  background: var(--primary);
+  color: white;
+}
+
+.next-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.next-btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 480px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .guide-page {
+    padding: 1.5rem 1rem;
+    min-height: calc(100vh - 1rem);
+  }
+
+  .guide-header h1 {
+    font-size: 1.3rem;
+  }
+
+
+  .guide-description h2 {
+    font-size: 1.2rem;
+  }
+
+  .nav-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* PC 화면에서도 모바일 너비 유지 */
+@media (min-width: 768px) {
+  .guide-container {
+    max-width: 600px;
+  }
+}
+
