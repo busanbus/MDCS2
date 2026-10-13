@@ -22,7 +22,7 @@ const NOTICES = [
   }
 ];
 
-const STEP_PAGES = ['p0', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+const STEP_PAGES = ['p0', 'p1', 'p3', 'p4', 'p5', 'p6', 'p7'];
 
 const VEHICLE_ITEMS = [
   { id: 'cctv', label: 'CCTV 작동 및 관리상태' },
@@ -155,6 +155,7 @@ const dom = {
   driverNameSubmit: document.getElementById('driver-name-submit'),
   siteOptions: document.getElementById('site-options'),
   busnoOptions: document.getElementById('busno-options'),
+  plateSection: document.getElementById('plate-section'),
   plateFilter: document.getElementById('plate-filter'),
   plateRecent: document.getElementById('plate-recent'),
   plateRecentGrid: document.getElementById('plate-recent-grid'),
@@ -295,8 +296,8 @@ function updateNav(page) {
 function renderPage(pageId) {
   if (pageId === 'p-landing') renderGreeting();
   if (pageId === 'p-driver-name') syncDriverName();
-  if (pageId === 'p1') renderBusNoOptions();
-  if (pageId === 'p2') {
+  if (pageId === 'p1') {
+    renderBusNoOptions();
     loadPlateData();
     renderPlates();
   }
@@ -426,8 +427,7 @@ function initDriverName() {
 // ======== 점검 단계 ========
 const stepRules = {
   p0: () => Boolean(state.site),
-  p1: () => Boolean(state.busNo),
-  p2: () => Boolean(state.plate),
+  p1: () => Boolean(state.busNo && state.plate),
   p3: () => state.uniform === 'ok' || (state.uniform === 'bad' && Boolean(state.uniformReason.trim())),
   p4: () => state.health === 'ok' || (state.health === 'symptom' && Boolean(getHealthDetail())),
   p5: () => Boolean(state.alcohol),
@@ -466,7 +466,7 @@ function renderSummary(pageId) {
   const items = [];
   if (index > 0 && state.site) items.push(state.site);
   if (index > 1 && state.busNo) items.push(formatBusNo(state.busNo));
-  if (index > 2 && state.plate) items.push(state.plate);
+  if (index > 1 && state.plate) items.push(state.plate);
   container.replaceChildren(...items.map((text) => {
     const chip = document.createElement('span');
     chip.className = 'summary-chip';
@@ -482,9 +482,8 @@ function syncStep(pageId) {
       break;
     case 'p1':
       markSelected(dom.busnoOptions, state.busNo);
-      break;
-    case 'p2':
-      markPlates();
+      dom.plateSection.hidden = !state.busNo;
+      if (state.busNo) markPlates();
       break;
     case 'p3':
       markSelected(dom.uniformOptions, state.uniform);
@@ -568,9 +567,16 @@ function markPlates() {
   markSelected(dom.plateRecentGrid, state.plate);
 }
 
+function scrollPlateSectionIntoView() {
+  window.setTimeout(() => {
+    const top = dom.plateSection.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, 40);
+}
+
 function goNext(pageId) {
   if (!stepRules[pageId]()) return;
-  if (pageId === 'p2') localStorage.setItem(LAST_PLATE_KEY, state.plate);
+  if (pageId === 'p1') localStorage.setItem(LAST_PLATE_KEY, state.plate);
 
   if (editDepth > 0) {
     // 근무지를 바꾸면 노선도 다시 골라야 한다
@@ -648,16 +654,18 @@ function initSteps() {
   });
 
   onOptionClick(dom.busnoOptions, (value) => {
+    const opening = dom.plateSection.hidden;
     state.busNo = value;
     syncStep('p1');
     updateCta('p1');
+    if (opening) scrollPlateSectionIntoView();
   });
 
   [dom.plateGrid, dom.plateRecentGrid].forEach((grid) => {
     onOptionClick(grid, (value) => {
       state.plate = value;
       markPlates();
-      updateCta('p2');
+      updateCta('p1');
     });
   });
   dom.plateFilter.addEventListener('input', () => {
@@ -730,7 +738,7 @@ function renderReview() {
     { label: '기사님', value: getDriverName(), page: 'p-driver-name' },
     { label: '근무지', value: state.site, page: 'p0' },
     { label: '노선', value: formatBusNo(state.busNo), page: 'p1' },
-    { label: '차량번호', value: state.plate, page: 'p2' },
+    { label: '차량번호', value: state.plate, page: 'p1' },
     {
       label: '복장 상태',
       value: state.uniform === 'bad' ? '불량' : '양호',

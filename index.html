@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=20261013a">
+<link rel="stylesheet" href="styles.css?v=20261013c">
 </head>
 <body>
 
@@ -82,7 +82,6 @@
 <!-- ======== 기사님 이름 ======== -->
 <section id="p-driver-name" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/id-card.png" alt="">
     <h1 class="top-title">기사님 성함을<br>알려주세요</h1>
     <p class="top-desc">처음 한 번만 입력하면 다음부터는 바로 시작해요.</p>
   </div>
@@ -93,16 +92,17 @@
     </label>
   </div>
   <div class="bottom-cta">
-    <button id="driver-name-submit" class="btn btn-primary" type="button" disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button id="driver-name-submit" class="btn btn-primary" type="button" disabled>다음</button>
+    </div>
   </div>
 </section>
 
 <!-- ======== 1단계 : 근무지 ======== -->
 <section id="p0" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/bus_illustration.png" alt="">
-    <p class="top-eyebrow">1 / 8</p>
+    <p class="top-eyebrow">1 / 7</p>
     <h1 class="top-title">오늘 근무하는 곳을<br>선택해 주세요</h1>
   </div>
   <div class="step-body">
@@ -113,62 +113,51 @@
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    </div>
   </div>
 </section>
 
-<!-- ======== 2단계 : 노선 ======== -->
+<!-- ======== 2단계 : 노선, 차량번호 ======== -->
 <section id="p1" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/route.png" alt="">
-    <p class="top-eyebrow">2 / 8</p>
+    <p class="top-eyebrow">2 / 7</p>
     <h1 class="top-title">운행할 노선을<br>선택해 주세요</h1>
   </div>
   <div class="step-body">
     <div id="busno-options" class="option-grid cols-3"></div>
+    <div id="plate-section" class="reveal follow-block" hidden>
+      <h2 class="follow-title">운행할 차량번호를<br>선택해 주세요</h2>
+      <div class="search-wrap">
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="plate-filter" class="field-input" type="text" inputmode="numeric" maxlength="4" placeholder="차량번호 숫자로 검색" autocomplete="off" aria-label="차량번호 검색">
+        </label>
+      </div>
+      <div id="plate-recent" hidden>
+        <p class="section-label">최근 선택</p>
+        <div id="plate-recent-grid" class="option-grid cols-3"></div>
+      </div>
+      <p id="plate-all-label" class="section-label">전체 차량</p>
+      <div id="plate-grid" class="option-grid cols-3"></div>
+      <p id="plate-empty" class="empty-state" hidden>검색한 차량번호가 없어요.</p>
+    </div>
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
-  </div>
-</section>
-
-<!-- ======== 3단계 : 차량번호 ======== -->
-<section id="p2" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <img class="top-asset" src="images/plate-number.png" alt="">
-    <p class="top-eyebrow">3 / 8</p>
-    <h1 class="top-title">운행할 차량번호를<br>선택해 주세요</h1>
-  </div>
-  <div class="step-body">
-    <div class="search-wrap">
-      <label class="search-field">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-        <input id="plate-filter" class="field-input" type="text" inputmode="numeric" maxlength="4" placeholder="차량번호 숫자로 검색" autocomplete="off" aria-label="차량번호 검색">
-      </label>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
     </div>
-    <div id="plate-recent" hidden>
-      <p class="section-label">최근 선택</p>
-      <div id="plate-recent-grid" class="option-grid cols-3"></div>
-    </div>
-    <p id="plate-all-label" class="section-label">전체 차량</p>
-    <div id="plate-grid" class="option-grid cols-3"></div>
-    <p id="plate-empty" class="empty-state" hidden>검색한 차량번호가 없어요.</p>
-  </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
   </div>
 </section>
 
 <!-- ======== 4단계 : 복장 ======== -->
 <section id="p3" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/uniform.png" alt="">
-    <p class="top-eyebrow">4 / 8</p>
+    <p class="top-eyebrow">3 / 7</p>
     <h1 class="top-title">복장 상태는<br>어떤가요?</h1>
   </div>
   <div class="step-body">
@@ -186,16 +175,17 @@
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    </div>
   </div>
 </section>
 
 <!-- ======== 5단계 : 건강 ======== -->
 <section id="p4" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/health.png" alt="">
-    <p class="top-eyebrow">5 / 8</p>
+    <p class="top-eyebrow">4 / 7</p>
     <h1 class="top-title">오늘 몸 상태는<br>어떤가요?</h1>
   </div>
   <div class="step-body">
@@ -220,16 +210,17 @@
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    </div>
   </div>
 </section>
 
 <!-- ======== 6단계 : 음주 ======== -->
 <section id="p5" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/no-drinks.png" alt="">
-    <p class="top-eyebrow">6 / 8</p>
+    <p class="top-eyebrow">5 / 7</p>
     <h1 class="top-title">24시간 안에<br>술을 마셨나요?</h1>
   </div>
   <div class="step-body">
@@ -247,16 +238,17 @@
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    </div>
   </div>
 </section>
 
 <!-- ======== 7단계 : 차량 내부 관리 실태 ======== -->
 <section id="p6" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/bus_illustration.png" alt="">
-    <p class="top-eyebrow">7 / 8</p>
+    <p class="top-eyebrow">6 / 7</p>
     <h1 class="top-title">차량 내부 관리 실태를<br>확인해 주세요</h1>
   </div>
   <div id="vehicle-checks" class="step-body check-list">
@@ -413,16 +405,17 @@
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    </div>
   </div>
 </section>
 
 <!-- ======== 8단계 : 차량 외부 관리 실태 ======== -->
 <section id="p7" class="page" data-nav="back" data-title="자가점검">
   <div class="top">
-    <img class="top-asset" src="images/bus_illustration.png" alt="">
-    <p class="top-eyebrow">8 / 8</p>
+    <p class="top-eyebrow">7 / 7</p>
     <h1 class="top-title">차량 외부 관리 실태를<br>확인해 주세요</h1>
   </div>
   <div id="exterior-checks" class="step-body check-list">
@@ -536,8 +529,10 @@
   </div>
   <div class="bottom-cta">
     <div class="summary" data-summary></div>
-    <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+    </div>
   </div>
 </section>
 
@@ -551,8 +546,10 @@
     <ul id="review-list" class="review-list"></ul>
   </div>
   <div class="bottom-cta">
-    <button id="submit-btn" class="btn btn-primary" type="button">제출하기</button>
-    <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button id="submit-btn" class="btn btn-primary" type="button">제출하기</button>
+    </div>
   </div>
 </section>
 
@@ -591,6 +588,6 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="header.js?v=20261012f"></script>
-<script src="app.js?v=20261013a"></script>
+<script src="app.js?v=20261013c"></script>
 </body>
 </html>

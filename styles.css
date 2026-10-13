@@ -361,6 +361,17 @@ img {
   pointer-events: auto;
 }
 
+.cta-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cta-row .btn {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+}
+
 body[data-tone="grey"] .bottom-cta {
   background: linear-gradient(to bottom, rgba(242, 244, 246, 0), var(--grey-100) 20px);
 }
@@ -369,7 +380,7 @@ body[data-tone="grey"] .bottom-cta {
 .page {
   display: none;
   min-height: 100vh;
-  padding: var(--nav-height) 0 calc(240px + env(safe-area-inset-bottom));
+  padding: var(--nav-height) 0 calc(168px + env(safe-area-inset-bottom));
 }
 
 .page.active {
@@ -387,13 +398,6 @@ body[data-tone="grey"] .bottom-cta {
 /* ======== Top (단계 제목) ======== */
 .top {
   padding: 20px 24px 0;
-}
-
-.top-asset {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 16px;
-  object-fit: contain;
 }
 
 .top-eyebrow {
@@ -712,6 +716,18 @@ body[data-tone="grey"] .bottom-cta {
 .reveal {
   margin-top: 20px;
   animation: reveal 0.28s var(--ease);
+}
+
+.follow-block {
+  margin-top: 36px;
+}
+
+.follow-title {
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.38;
+  letter-spacing: -0.3px;
 }
 
 /* ======== 입력 ======== */
