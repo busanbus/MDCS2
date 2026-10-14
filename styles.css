@@ -52,10 +52,13 @@
 
 html {
   background: var(--grey-200);
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
   font-family: var(--font);
   line-height: 1.5;
   color: var(--grey-900);
@@ -380,6 +383,7 @@ body[data-tone="grey"] .bottom-cta {
 .page {
   display: none;
   min-height: 100vh;
+  min-height: 100svh;
   padding: var(--nav-height) 0 calc(168px + env(safe-area-inset-bottom));
 }
 
@@ -518,15 +522,20 @@ body[data-tone="grey"] .bottom-cta {
 .check-list {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 16px;
+}
+
+.check-section .follow-title {
+  margin-bottom: 22px;
+  font-size: 24px;
 }
 
 .check-item-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  font-size: 20px;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 17px;
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.2px;
@@ -535,27 +544,38 @@ body[data-tone="grey"] .bottom-cta {
 
 .check-item-no {
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: var(--blue-500);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   color: #fff;
 }
 
-.check-item .reveal {
-  margin-top: 12px;
+.check-list .option-grid {
+  gap: 8px;
 }
 
-.check-item .field-textarea {
-  min-height: 88px;
+.check-list .option-tile.compact {
+  min-height: 48px;
+  padding: 8px 4px;
+  font-size: 16px;
+}
+
+.check-item .reveal {
+  margin-top: 10px;
 }
 
 .problem-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+  padding: 10px 12px 8px;
   overflow: hidden;
   border-radius: var(--radius-m);
   background: var(--grey-100);
@@ -565,61 +585,80 @@ body[data-tone="grey"] .bottom-cta {
   box-shadow: inset 0 0 0 2px var(--blue-500);
 }
 
+.problem-box .field {
+  display: contents;
+}
+
 .problem-box .field-label {
-  padding: 14px 18px 0;
-  margin-bottom: 0;
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
 }
 
 .problem-box .field-input,
 .problem-box .field-input:focus {
-  background: transparent;
+  grid-column: 1 / -1;
+  min-height: 0;
+  padding: 4px 2px 0;
   border-color: transparent;
   border-radius: 0;
+  background: transparent;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.check-item .field-textarea {
+  min-height: 42px;
 }
 
 .problem-box .field-counter {
-  margin-top: -6px;
-  padding: 0 18px 12px;
+  grid-column: 1;
+  align-self: center;
+  margin: 0;
+  padding: 0;
 }
 
 .photo-btn {
   position: relative;
-  width: calc(100% - 24px);
-  min-height: 56px;
-  display: flex;
+  grid-column: 2;
+  width: auto;
+  min-height: 34px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin: 0 12px 12px;
-  padding: 0 16px;
-  border-radius: 12px;
-  background: var(--blue-500);
-  color: #fff;
+  gap: 6px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--blue-600);
+  box-shadow: inset 0 0 0 1.5px var(--blue-500);
 }
 
 .photo-btn:active {
-  background: var(--blue-700);
+  background: var(--blue-50);
 }
 
 .photo-icon {
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
+  width: 18px;
+  height: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--blue-500);
 }
 
 .photo-icon svg {
-  width: 26px;
-  height: 26px;
+  width: 18px;
+  height: 18px;
 }
 
 .photo-btn-title {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: var(--blue-600);
 }
 
 .photo-input {
@@ -634,18 +673,23 @@ body[data-tone="grey"] .bottom-cta {
 }
 
 .photo-preview {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 16px 14px;
+  gap: 10px;
+  padding: 6px 0 2px;
+}
+
+.photo-preview[hidden] {
+  display: none;
 }
 
 .photo-preview img {
-  width: 72px;
-  height: 72px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
-  border-radius: 12px;
-  background: var(--grey-100);
+  border-radius: 8px;
+  background: #fff;
 }
 
 /* ======== 선택 목록 (라디오형) ======== */
@@ -722,12 +766,48 @@ body[data-tone="grey"] .bottom-cta {
   margin-top: 36px;
 }
 
+.page-follow {
+  min-height: calc(100svh - var(--nav-height));
+}
+
 .follow-title {
   margin-bottom: 20px;
   font-size: 26px;
   font-weight: 700;
   line-height: 1.38;
   letter-spacing: -0.3px;
+}
+
+.continue-btn {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.plate-scroll {
+  max-height: 200px;
+  margin-top: 4px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#plate-grid .option-tile,
+#plate-recent-grid .option-tile {
+  min-height: 44px;
+  padding: 6px 4px;
+  font-size: 17px;
+}
+
+.plate-scroll .section-label {
+  margin-top: 8px;
+}
+
+.field-textarea.health-note {
+  min-height: 72px;
+}
+
+.health-reset {
+  display: block;
+  margin: 12px auto 0;
 }
 
 /* ======== 입력 ======== */
@@ -847,12 +927,13 @@ body[data-tone="grey"] .bottom-cta {
 .landing {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 8px 20px 0;
+  gap: 12px;
+  min-height: calc(100svh - var(--nav-height) - 104px - env(safe-area-inset-bottom));
+  padding: 4px 20px 0;
 }
 
 .landing-greeting {
-  padding: 12px 4px 4px;
+  padding: 8px 4px 0;
 }
 
 .landing-date {
@@ -871,16 +952,15 @@ body[data-tone="grey"] .bottom-cta {
 }
 
 .banner {
-  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: var(--radius-l);
   background: #163E86;
 }
 
 .banner img {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
 }
 
 .section-card {
@@ -888,6 +968,20 @@ body[data-tone="grey"] .bottom-cta {
   border: 1px solid var(--grey-200);
   border-radius: var(--radius-l);
   background: #fff;
+}
+
+.landing .section-card {
+  margin-top: auto;
+}
+
+.landing .list-header {
+  margin-bottom: 0;
+  padding: 6px 0;
+}
+
+.landing .list-row {
+  gap: 12px;
+  padding: 8px 16px;
 }
 
 .list-header {
@@ -1199,18 +1293,18 @@ body[data-tone="grey"] .bottom-cta {
 
 /* ======== 애니메이션 ======== */
 @keyframes pageInForward {
-  from { opacity: 0; transform: translateX(24px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes pageInBack {
-  from { opacity: 0; transform: translateX(-24px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes reveal {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes sheetUp {

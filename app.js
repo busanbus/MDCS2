@@ -136,6 +136,14 @@ function createEmptyState() {
     healthOption: '',   // 몸살 | 감기 | 장염 | 기타
     healthCustom: '',
     alcohol: '',        // 'yes' | 'no'
+    opened: {
+      uniform: false,
+      health: false,
+      alcohol: false,
+      interior: false,
+      exterior: false,
+      review: false
+    },
     vehicle: createVehicleState(),
     exterior: createExteriorState()
   };
@@ -154,6 +162,7 @@ const dom = {
   driverNameInput: document.getElementById('driver-name-input'),
   driverNameSubmit: document.getElementById('driver-name-submit'),
   siteOptions: document.getElementById('site-options'),
+  routeSection: document.getElementById('route-section'),
   busnoOptions: document.getElementById('busno-options'),
   plateSection: document.getElementById('plate-section'),
   plateFilter: document.getElementById('plate-filter'),
@@ -169,11 +178,26 @@ const dom = {
   healthOptions: document.getElementById('health-options'),
   healthDetailWrap: document.getElementById('health-detail-wrap'),
   healthChips: document.getElementById('health-chips'),
+  healthDetailLabel: document.getElementById('health-detail-label'),
   healthCustomWrap: document.getElementById('health-custom-wrap'),
   healthCustom: document.getElementById('health-custom'),
   healthCounter: document.getElementById('health-counter'),
   alcoholOptions: document.getElementById('alcohol-options'),
   alcoholWarning: document.getElementById('alcohol-warning'),
+  uniformSection: document.getElementById('uniform-section'),
+  healthSection: document.getElementById('health-section'),
+  alcoholSection: document.getElementById('alcohol-section'),
+  interiorSection: document.getElementById('interior-section'),
+  exteriorSection: document.getElementById('exterior-section'),
+  reviewSection: document.getElementById('review-section'),
+  uniformContinue: document.getElementById('uniform-continue'),
+  healthContinue: document.getElementById('health-continue'),
+  healthChipReset: document.getElementById('health-chip-reset'),
+  alcoholContinue: document.getElementById('alcohol-continue'),
+  interiorContinue: document.getElementById('interior-continue'),
+  exteriorContinue: document.getElementById('exterior-continue'),
+  flowPrevRow: document.getElementById('flow-prev-row'),
+  flowSubmitRow: document.getElementById('flow-submit-row'),
   vehicleChecks: document.getElementById('vehicle-checks'),
   exteriorChecks: document.getElementById('exterior-checks'),
   exteriorAlert: document.getElementById('exterior-alert'),
@@ -252,7 +276,9 @@ function updateCounter(input, counter) {
 function focusLater(input) {
   setTimeout(() => {
     input.focus({ preventScroll: true });
-    input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const box = input.closest('.problem-box') || input;
+    const top = box.getBoundingClientRect().top + window.scrollY - 76;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }, 150);
 }
 
@@ -296,7 +322,7 @@ function updateNav(page) {
 function renderPage(pageId) {
   if (pageId === 'p-landing') renderGreeting();
   if (pageId === 'p-driver-name') syncDriverName();
-  if (pageId === 'p1') {
+  if (pageId === 'p0') {
     renderBusNoOptions();
     loadPlateData();
     renderPlates();
@@ -309,8 +335,27 @@ function renderPage(pageId) {
   }
 }
 
+function atFlowStart() {
+  return currentFlowIndex() <= 0 && window.scrollY <= 48;
+}
+
+function stepFlowBack() {
+  const prev = FLOW_STEPS[Math.max(0, currentFlowIndex() - 1)];
+  setFlowChrome(prev.step);
+  scrollSectionIntoView(document.getElementById(prev.id));
+}
+
 function navigateBack() {
-  history.back();
+  const onFlow = document.getElementById('p0')?.classList.contains('active');
+  if (!onFlow) {
+    history.back();
+    return;
+  }
+  if (atFlowStart()) {
+    history.back();
+    return;
+  }
+  stepFlowBack();
 }
 
 // 처음 화면으로 이동하는 함수 (상단 로고)
@@ -329,6 +374,13 @@ function startCheck() {
 }
 
 window.addEventListener('popstate', (event) => {
+  const onFlow = document.getElementById('p0')?.classList.contains('active');
+  if (onFlow && !atFlowStart()) {
+    history.pushState({ page: 'p0', session }, '', '');
+    stepFlowBack();
+    return;
+  }
+
   const { page = 'p-landing', session: entrySession } = event.state || {};
   if (editDepth > 0) editDepth -= 1;
 
@@ -344,9 +396,11 @@ window.addEventListener('popstate', (event) => {
 
 // ======== 메인 화면 ========
 function renderGreeting() {
-  dom.landingDate.textContent = new Intl.DateTimeFormat('ko-KR', {
-    month: 'long', day: 'numeric', weekday: 'long'
-  }).format(new Date());
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const date = String(today.getDate()).padStart(2, '0');
+  const weekday = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][today.getDay()];
+  dom.landingDate.textContent = `${today.getFullYear()}년 ${month}월 ${date}일 ${weekday}`;
 
   const name = getDriverName();
   dom.landingHello.replaceChildren('안녕하세요,', document.createElement('br'), name ? `${name} 기사님` : '기사님');
@@ -390,9 +444,8 @@ function createNoticeRow(notice) {
 }
 
 function initNotices() {
-  ['landing-notice-list', 'board-notice-list'].forEach((id) => {
-    document.getElementById(id).replaceChildren(...NOTICES.map(createNoticeRow));
-  });
+  document.getElementById('landing-notice-list').replaceChildren(...NOTICES.slice(0, 2).map(createNoticeRow));
+  document.getElementById('board-notice-list').replaceChildren(...NOTICES.map(createNoticeRow));
   document.getElementById('notice-board-open').addEventListener('click', () => showPage('p-board'));
   document.getElementById('notice-viewer-close').addEventListener('click', closeNotice);
   document.addEventListener('keydown', (event) => {
@@ -475,42 +528,73 @@ function renderSummary(pageId) {
   }));
 }
 
+const OPEN_ORDER = ['uniform', 'health', 'alcohol', 'interior', 'exterior', 'review'];
+const FLOW_STEPS = [
+  { id: 'site-head', step: 1 },
+  { id: 'route-section', step: 2 },
+  { id: 'uniform-section', step: 3 },
+  { id: 'health-section', step: 4 },
+  { id: 'alcohol-section', step: 5 },
+  { id: 'interior-section', step: 6 },
+  { id: 'exterior-section', step: 7 },
+  { id: 'review-section', step: 8 }
+];
+const ADVANCE = {
+  uniform: { step: 3, section: 'uniformSection' },
+  health: { step: 4, section: 'healthSection' },
+  alcohol: { step: 5, section: 'alcoholSection' },
+  interior: { step: 6, section: 'interiorSection' },
+  exterior: { step: 7, section: 'exteriorSection' },
+  review: { step: 8, section: 'reviewSection' }
+};
+
+function resetOpenedFrom(name) {
+  const start = OPEN_ORDER.indexOf(name);
+  if (start < 0) return;
+  OPEN_ORDER.slice(start).forEach((key) => { state.opened[key] = false; });
+}
+
+function refreshGates() {
+  if (!problemListComplete(VEHICLE_ITEMS, state.vehicle)) resetOpenedFrom('exterior');
+  if (!problemListComplete(EXTERIOR_ITEMS, state.exterior)) state.opened.review = false;
+  dom.routeSection.hidden = !state.site;
+  dom.plateSection.hidden = !state.busNo;
+  dom.uniformSection.hidden = !state.opened.uniform;
+  dom.healthSection.hidden = !state.opened.health;
+  dom.alcoholSection.hidden = !state.opened.alcohol;
+  dom.interiorSection.hidden = !state.opened.interior;
+  dom.exteriorSection.hidden = !state.opened.exterior;
+  dom.reviewSection.hidden = !state.opened.review;
+  dom.uniformContinue.hidden = !(state.uniform === 'bad' && state.uniformReason.trim());
+  dom.healthContinue.hidden = !(state.health === 'symptom' && state.healthOption === '기타' && state.healthCustom.trim());
+  dom.alcoholContinue.hidden = state.alcohol !== 'yes';
+  dom.interiorContinue.hidden = !problemListComplete(VEHICLE_ITEMS, state.vehicle);
+  dom.exteriorContinue.hidden = !problemListComplete(EXTERIOR_ITEMS, state.exterior);
+}
+
 function syncStep(pageId) {
-  switch (pageId) {
-    case 'p0':
-      markSelected(dom.siteOptions, state.site);
-      break;
-    case 'p1':
-      markSelected(dom.busnoOptions, state.busNo);
-      dom.plateSection.hidden = !state.busNo;
-      if (state.busNo) markPlates();
-      break;
-    case 'p3':
-      markSelected(dom.uniformOptions, state.uniform);
-      dom.uniformReasonWrap.hidden = state.uniform !== 'bad';
-      dom.reasonInput.value = state.uniformReason;
-      updateCounter(dom.reasonInput, dom.reasonCounter);
-      break;
-    case 'p4':
-      markSelected(dom.healthOptions, state.health);
-      dom.healthDetailWrap.hidden = state.health !== 'symptom';
-      markSelected(dom.healthChips, state.healthOption);
-      dom.healthCustomWrap.hidden = state.healthOption !== '기타';
-      dom.healthCustom.value = state.healthCustom;
-      updateCounter(dom.healthCustom, dom.healthCounter);
-      break;
-    case 'p5':
-      markSelected(dom.alcoholOptions, state.alcohol);
-      dom.alcoholWarning.hidden = state.alcohol !== 'yes';
-      break;
-    case 'p6':
-      syncProblemList(dom.vehicleChecks, VEHICLE_ITEMS, state.vehicle);
-      break;
-    case 'p7':
-      syncProblemList(dom.exteriorChecks, EXTERIOR_ITEMS, state.exterior);
-      updateExteriorAlert();
-      break;
-  }
+  if (pageId !== 'p0') return;
+  markSelected(dom.siteOptions, state.site);
+  if (state.site) markSelected(dom.busnoOptions, state.busNo);
+  if (state.busNo) markPlates();
+  markSelected(dom.uniformOptions, state.uniform);
+  dom.uniformReasonWrap.hidden = state.uniform !== 'bad';
+  if (document.activeElement !== dom.reasonInput) dom.reasonInput.value = state.uniformReason;
+  updateCounter(dom.reasonInput, dom.reasonCounter);
+  markSelected(dom.healthOptions, state.health);
+  dom.healthDetailWrap.hidden = state.health !== 'symptom';
+  markSelected(dom.healthChips, state.healthOption);
+  dom.healthChips.hidden = state.healthOption === '기타';
+  if (dom.healthDetailLabel) dom.healthDetailLabel.hidden = state.healthOption === '기타';
+  dom.healthCustomWrap.hidden = state.healthOption !== '기타';
+  if (document.activeElement !== dom.healthCustom) dom.healthCustom.value = state.healthCustom;
+  updateCounter(dom.healthCustom, dom.healthCounter);
+  markSelected(dom.alcoholOptions, state.alcohol);
+  dom.alcoholWarning.hidden = state.alcohol !== 'yes';
+  syncProblemList(dom.vehicleChecks, VEHICLE_ITEMS, state.vehicle);
+  syncProblemList(dom.exteriorChecks, EXTERIOR_ITEMS, state.exterior);
+  updateExteriorAlert();
+  refreshGates();
 }
 
 function syncProblemList(root, items, bucket) {
@@ -567,22 +651,67 @@ function markPlates() {
   markSelected(dom.plateRecentGrid, state.plate);
 }
 
-function scrollPlateSectionIntoView() {
+function scrollSectionIntoView(section) {
   window.setTimeout(() => {
-    const top = dom.plateSection.getBoundingClientRect().top + window.scrollY - 64;
+    const top = section.getBoundingClientRect().top + window.scrollY - 64;
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }, 40);
 }
 
+function scrollPlateSectionIntoView() {
+  scrollSectionIntoView(dom.plateSection);
+}
+
+function setFlowChrome(stepNumber) {
+  const review = stepNumber >= 8;
+  if (dom.flowPrevRow) dom.flowPrevRow.hidden = review;
+  if (dom.flowSubmitRow) dom.flowSubmitRow.hidden = !review;
+  if (typeof setNav === 'function') {
+    setNav({ mode: 'back', progress: review ? 1 : stepNumber / 8 });
+  }
+  const container = document.querySelector('#p0 [data-summary]');
+  if (!container) return;
+  const items = [];
+  if (stepNumber > 1 && state.site) items.push(state.site);
+  if (stepNumber > 2 && state.busNo) items.push(formatBusNo(state.busNo));
+  if (stepNumber > 2 && state.plate) items.push(state.plate);
+  container.replaceChildren(...items.map((text) => {
+    const chip = document.createElement('span');
+    chip.className = 'summary-chip';
+    chip.textContent = text;
+    return chip;
+  }));
+}
+
+function advance(name) {
+  const spec = ADVANCE[name];
+  state.opened[name] = true;
+  syncStep('p0');
+  setFlowChrome(spec.step);
+  scrollSectionIntoView(dom[spec.section]);
+  if (name === 'review') renderReview();
+}
+
+function currentFlowIndex() {
+  let index = 0;
+  FLOW_STEPS.forEach((step, i) => {
+    const el = document.getElementById(step.id);
+    if (!el || el.hidden) return;
+    if (el.getBoundingClientRect().top <= 80) index = i;
+  });
+  return index;
+}
+
 function goNext(pageId) {
   if (!stepRules[pageId]()) return;
-  if (pageId === 'p1') localStorage.setItem(LAST_PLATE_KEY, state.plate);
+  if (state.plate) localStorage.setItem(LAST_PLATE_KEY, state.plate);
 
   if (editDepth > 0) {
     // 근무지를 바꾸면 노선도 다시 골라야 한다
     if (pageId === 'p0' && !state.busNo) {
       editDepth += 1;
-      showPage('p1');
+      setFlowChrome(2);
+      scrollSectionIntoView(dom.routeSection);
       return;
     }
     returnToReview();
@@ -613,7 +742,7 @@ function bindProblemList(root, bucketName, pageId) {
     if (!input) return;
     state[bucketName][input.dataset.note].note = input.value;
     input.parentElement.querySelector('.field-counter').textContent = `${input.value.length} / 100`;
-    updateCta(pageId);
+    refreshGates();
   });
   root.addEventListener('change', async (event) => {
     const input = event.target.closest('[data-photo]');
@@ -647,25 +776,31 @@ function bindProblemList(root, bucketName, pageId) {
 
 function initSteps() {
   onOptionClick(dom.siteOptions, (value) => {
-    if (state.site !== value) state.busNo = '';
+    const opening = dom.routeSection.hidden || state.site !== value;
+    if (state.site !== value) {
+      state.busNo = '';
+      resetOpenedFrom('uniform');
+    }
     state.site = value;
+    renderBusNoOptions();
     syncStep('p0');
-    updateCta('p0');
+    setFlowChrome(2);
+    if (opening) scrollSectionIntoView(dom.routeSection);
   });
 
   onOptionClick(dom.busnoOptions, (value) => {
     const opening = dom.plateSection.hidden;
     state.busNo = value;
-    syncStep('p1');
-    updateCta('p1');
+    syncStep('p0');
     if (opening) scrollPlateSectionIntoView();
   });
 
   [dom.plateGrid, dom.plateRecentGrid].forEach((grid) => {
     onOptionClick(grid, (value) => {
       state.plate = value;
+      localStorage.setItem(LAST_PLATE_KEY, state.plate);
       markPlates();
-      updateCta('p1');
+      advance('uniform');
     });
   });
   dom.plateFilter.addEventListener('input', () => {
@@ -676,41 +811,78 @@ function initSteps() {
 
   onOptionClick(dom.uniformOptions, (value) => {
     state.uniform = value;
-    syncStep('p3');
-    updateCta('p3');
-    if (value === 'bad') focusLater(dom.reasonInput);
+    if (value === 'ok') {
+      advance('health');
+      return;
+    }
+    resetOpenedFrom('health');
+    syncStep('p0');
+    scrollSectionIntoView(dom.uniformReasonWrap);
+    focusLater(dom.reasonInput);
   });
   dom.reasonInput.addEventListener('input', () => {
     state.uniformReason = dom.reasonInput.value;
     updateCounter(dom.reasonInput, dom.reasonCounter);
-    updateCta('p3');
+    refreshGates();
+  });
+  dom.uniformContinue.addEventListener('click', () => {
+    if (state.uniformReason.trim()) advance('health');
   });
 
   onOptionClick(dom.healthOptions, (value) => {
     state.health = value;
-    syncStep('p4');
-    updateCta('p4');
+    if (value === 'ok') {
+      advance('alcohol');
+      return;
+    }
+    resetOpenedFrom('alcohol');
+    syncStep('p0');
+    scrollSectionIntoView(dom.healthDetailWrap);
   });
   onOptionClick(dom.healthChips, (value) => {
     state.healthOption = value;
-    syncStep('p4');
-    updateCta('p4');
-    if (value === '기타') focusLater(dom.healthCustom);
+    if (value === '기타') {
+      resetOpenedFrom('alcohol');
+      syncStep('p0');
+      focusLater(dom.healthCustom);
+      return;
+    }
+    advance('alcohol');
   });
   dom.healthCustom.addEventListener('input', () => {
     state.healthCustom = dom.healthCustom.value;
     updateCounter(dom.healthCustom, dom.healthCounter);
-    updateCta('p4');
+    refreshGates();
+  });
+  dom.healthContinue.addEventListener('click', () => {
+    if (state.healthCustom.trim()) advance('alcohol');
+  });
+  dom.healthChipReset.addEventListener('click', () => {
+    state.healthOption = '';
+    resetOpenedFrom('alcohol');
+    syncStep('p0');
   });
 
   onOptionClick(dom.alcoholOptions, (value) => {
     state.alcohol = value;
-    syncStep('p5');
-    updateCta('p5');
+    if (value === 'no') {
+      advance('interior');
+      return;
+    }
+    resetOpenedFrom('interior');
+    syncStep('p0');
+    scrollSectionIntoView(dom.alcoholWarning);
   });
+  dom.alcoholContinue.addEventListener('click', () => advance('interior'));
 
-  bindProblemList(dom.vehicleChecks, 'vehicle', 'p6');
-  bindProblemList(dom.exteriorChecks, 'exterior', 'p7');
+  bindProblemList(dom.vehicleChecks, 'vehicle', 'p0');
+  bindProblemList(dom.exteriorChecks, 'exterior', 'p0');
+  dom.interiorContinue.addEventListener('click', () => {
+    if (problemListComplete(VEHICLE_ITEMS, state.vehicle)) advance('exterior');
+  });
+  dom.exteriorContinue.addEventListener('click', () => {
+    if (problemListComplete(EXTERIOR_ITEMS, state.exterior)) advance('review');
+  });
 
   document.querySelectorAll('[data-next]').forEach((button) => {
     button.addEventListener('click', () => goNext(button.closest('.page').id));
@@ -722,8 +894,20 @@ function initSteps() {
 }
 
 // ======== 제출 전 확인 ========
-function startEdit(pageId) {
+function startEdit(pageId, anchor) {
   editDepth = 1;
+  const targetId = anchor || { p3: 'uniform-section', p4: 'health-section', p5: 'alcohol-section', p6: 'interior-section', p7: 'exterior-section' }[pageId];
+  if (targetId) {
+    showPage('p0');
+    window.setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      scrollSectionIntoView(el);
+      const step = FLOW_STEPS.find((item) => item.id === targetId);
+      if (step) setFlowChrome(step.step);
+    }, 60);
+    return;
+  }
   showPage(pageId);
 }
 
@@ -736,9 +920,9 @@ function returnToReview() {
 function renderReview() {
   const rows = [
     { label: '기사님', value: getDriverName(), page: 'p-driver-name' },
-    { label: '근무지', value: state.site, page: 'p0' },
-    { label: '노선', value: formatBusNo(state.busNo), page: 'p1' },
-    { label: '차량번호', value: state.plate, page: 'p1' },
+    { label: '근무지', value: state.site, page: 'p0', anchor: 'site-head' },
+    { label: '노선', value: formatBusNo(state.busNo), page: 'p0', anchor: 'route-section' },
+    { label: '차량번호', value: state.plate, page: 'p0', anchor: 'plate-section' },
     {
       label: '복장 상태',
       value: state.uniform === 'bad' ? '불량' : '양호',
@@ -795,7 +979,7 @@ function appendProblemFields(formData, prefix, items, bucket) {
   });
 }
 
-function createReviewRow({ label, value, detail, warn, page }) {
+function createReviewRow({ label, value, detail, warn, page, anchor }) {
   const item = document.createElement('li');
   item.className = 'review-row';
 
@@ -820,7 +1004,7 @@ function createReviewRow({ label, value, detail, warn, page }) {
   edit.className = 'text-btn';
   edit.textContent = '수정';
   edit.setAttribute('aria-label', `${label} 수정`);
-  edit.addEventListener('click', () => startEdit(page));
+  edit.addEventListener('click', () => startEdit(page, anchor));
 
   item.append(main, edit);
   return item;

@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=20261013c">
+<link rel="stylesheet" href="styles.css?v=20261014g">
 </head>
 <body>
 
@@ -99,9 +99,9 @@
   </div>
 </section>
 
-<!-- ======== 1단계 : 근무지 ======== -->
+<!-- ======== 1단계 : 근무지, 이어서 2단계 노선 ======== -->
 <section id="p0" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
+  <div class="top" id="site-head">
     <p class="top-eyebrow">1 / 7</p>
     <h1 class="top-title">오늘 근무하는 곳을<br>선택해 주세요</h1>
   </div>
@@ -110,57 +110,33 @@
       <button class="option-tile tall" type="button" data-value="노포" aria-pressed="false">노포</button>
       <button class="option-tile tall" type="button" data-value="정관" aria-pressed="false">정관</button>
     </div>
-  </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    </div>
-  </div>
-</section>
-
-<!-- ======== 2단계 : 노선, 차량번호 ======== -->
-<section id="p1" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <p class="top-eyebrow">2 / 7</p>
-    <h1 class="top-title">운행할 노선을<br>선택해 주세요</h1>
-  </div>
-  <div class="step-body">
-    <div id="busno-options" class="option-grid cols-3"></div>
-    <div id="plate-section" class="reveal follow-block" hidden>
-      <h2 class="follow-title">운행할 차량번호를<br>선택해 주세요</h2>
-      <div class="search-wrap">
-        <label class="search-field">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input id="plate-filter" class="field-input" type="text" inputmode="numeric" maxlength="4" placeholder="차량번호 숫자로 검색" autocomplete="off" aria-label="차량번호 검색">
-        </label>
+    <div id="route-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">2 / 7</p>
+      <h2 class="follow-title">운행할 노선을<br>선택해 주세요</h2>
+      <div id="busno-options" class="option-grid cols-3"></div>
+      <div id="plate-section" class="reveal follow-block" hidden>
+        <h2 class="follow-title">차량번호를 선택해 주세요.</h2>
+        <div class="search-wrap">
+          <label class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="plate-filter" class="field-input" type="text" inputmode="numeric" maxlength="4" placeholder="차량번호 숫자로 검색" autocomplete="off" aria-label="차량번호 검색">
+          </label>
+        </div>
+        <div id="plate-recent" hidden>
+          <p class="section-label">최근 선택</p>
+          <div id="plate-recent-grid" class="option-grid cols-3"></div>
+        </div>
+        <div class="plate-scroll">
+          <p id="plate-all-label" class="section-label">전체 차량</p>
+          <div id="plate-grid" class="option-grid cols-3"></div>
+          <p id="plate-empty" class="empty-state" hidden>검색한 차량번호가 없어요.</p>
+        </div>
       </div>
-      <div id="plate-recent" hidden>
-        <p class="section-label">최근 선택</p>
-        <div id="plate-recent-grid" class="option-grid cols-3"></div>
-      </div>
-      <p id="plate-all-label" class="section-label">전체 차량</p>
-      <div id="plate-grid" class="option-grid cols-3"></div>
-      <p id="plate-empty" class="empty-state" hidden>검색한 차량번호가 없어요.</p>
     </div>
-  </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
-    </div>
-  </div>
-</section>
-
-<!-- ======== 4단계 : 복장 ======== -->
-<section id="p3" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <p class="top-eyebrow">3 / 7</p>
-    <h1 class="top-title">복장 상태는<br>어떤가요?</h1>
-  </div>
-  <div class="step-body">
+    <div id="uniform-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">3 / 7</p>
+    <h2 class="follow-title">복장 상태는<br>어떤가요?</h2>
+  
     <div id="uniform-options" class="option-list">
       <button class="option-row" type="button" data-value="ok" aria-pressed="false">양호해요<span class="radio" aria-hidden="true"></span></button>
       <button class="option-row" type="button" data-value="bad" aria-pressed="false">불량이에요<span class="radio" aria-hidden="true"></span></button>
@@ -172,58 +148,43 @@
         <span id="reason-counter" class="field-counter">0 / 100</span>
       </label>
     </div>
-  </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+      <button id="uniform-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
     </div>
-  </div>
-</section>
 
-<!-- ======== 5단계 : 건강 ======== -->
-<section id="p4" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <p class="top-eyebrow">4 / 7</p>
-    <h1 class="top-title">오늘 몸 상태는<br>어떤가요?</h1>
-  </div>
-  <div class="step-body">
+
+    <div id="health-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">4 / 7</p>
+    <h2 class="follow-title">오늘 몸 상태는<br>어떤가요?</h2>
+  
     <div id="health-options" class="option-list">
       <button class="option-row" type="button" data-value="ok" aria-pressed="false">양호해요<span class="radio" aria-hidden="true"></span></button>
       <button class="option-row" type="button" data-value="symptom" aria-pressed="false">증상이 있어요<span class="radio" aria-hidden="true"></span></button>
     </div>
     <div id="health-detail-wrap" class="reveal" hidden>
-      <p class="section-label">어떤 증상인가요?</p>
+      <p id="health-detail-label" class="section-label">어떤 증상인가요?</p>
       <div id="health-chips" class="option-grid cols-2">
         <button class="option-tile compact" type="button" data-value="몸살" aria-pressed="false">몸살</button>
         <button class="option-tile compact" type="button" data-value="감기" aria-pressed="false">감기</button>
         <button class="option-tile compact" type="button" data-value="장염" aria-pressed="false">장염</button>
         <button class="option-tile compact" type="button" data-value="기타" aria-pressed="false">기타</button>
       </div>
-      <label id="health-custom-wrap" class="field reveal" hidden>
-        <span class="field-label">증상을 적어 주세요</span>
-        <textarea id="health-custom" class="field-input field-textarea" rows="3" maxlength="100" placeholder="예) 두통이 있어요" autocomplete="off"></textarea>
-        <span id="health-counter" class="field-counter">0 / 100</span>
-      </label>
+      <div id="health-custom-wrap" class="reveal" hidden>
+        <label class="field">
+          <span class="field-label">증상을 적어 주세요</span>
+          <textarea id="health-custom" class="field-input field-textarea health-note" rows="2" maxlength="100" placeholder="예) 두통이 있어요" autocomplete="off"></textarea>
+          <span id="health-counter" class="field-counter">0 / 100</span>
+        </label>
+        <button id="health-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+        <button id="health-chip-reset" class="text-btn health-reset" type="button">다른 증상 고르기</button>
+      </div>
     </div>
-  </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
     </div>
-  </div>
-</section>
 
-<!-- ======== 6단계 : 음주 ======== -->
-<section id="p5" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <p class="top-eyebrow">5 / 7</p>
-    <h1 class="top-title">24시간 안에<br>술을 마셨나요?</h1>
-  </div>
-  <div class="step-body">
+
+    <div id="alcohol-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">5 / 7</p>
+    <h2 class="follow-title">24시간 내에<br>술을 마셨나요?</h2>
+  
     <div id="alcohol-options" class="option-list">
       <button class="option-row" type="button" data-value="no" aria-pressed="false">아니요, 마시지 않았어요<span class="radio" aria-hidden="true"></span></button>
       <button class="option-row danger" type="button" data-value="yes" aria-pressed="false">예, 마셨어요<span class="radio" aria-hidden="true"></span></button>
@@ -235,23 +196,14 @@
         <p class="callout-desc">관리자에게 문의한 뒤 음주 측정을 진행해 주세요.</p>
       </div>
     </div>
-  </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+      <button id="alcohol-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
     </div>
-  </div>
-</section>
 
-<!-- ======== 7단계 : 차량 내부 관리 실태 ======== -->
-<section id="p6" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <p class="top-eyebrow">6 / 7</p>
-    <h1 class="top-title">차량 내부 관리 실태를<br>확인해 주세요</h1>
-  </div>
-  <div id="vehicle-checks" class="step-body check-list">
+
+    <div id="interior-section" class="reveal follow-block page-follow check-section" hidden>
+      <p class="top-eyebrow">6 / 7</p>
+    <h2 class="follow-title">차량 내부 관리 실태를<br>확인해 주세요</h2>
+  <div id="vehicle-checks" class="check-list">
     <div class="check-item" data-check="cctv">
       <p class="check-item-title"><span class="check-item-no">1</span>CCTV 작동 및 관리상태</p>
       <div class="option-grid cols-2">
@@ -262,7 +214,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="cctv" rows="2" maxlength="100" placeholder="예) 화면이 나오지 않아요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="cctv" rows="1" maxlength="100" placeholder="예) 화면이 나오지 않아요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -287,7 +239,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="terminal" rows="2" maxlength="100" placeholder="예) 단말기가 켜지지 않아요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="terminal" rows="1" maxlength="100" placeholder="예) 단말기가 켜지지 않아요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -312,7 +264,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="energy" rows="2" maxlength="100" placeholder="예) CNG가 거의 없어요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="energy" rows="1" maxlength="100" placeholder="예) CNG가 거의 없어요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -337,7 +289,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="dashboard" rows="2" maxlength="100" placeholder="예) 경고등이 켜져 있어요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="dashboard" rows="1" maxlength="100" placeholder="예) 경고등이 켜져 있어요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -362,7 +314,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="suspension" rows="2" maxlength="100" placeholder="예) 한쪽이 내려가 있어요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="suspension" rows="1" maxlength="100" placeholder="예) 한쪽이 내려가 있어요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -387,7 +339,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="etc" rows="2" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="etc" rows="1" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -403,22 +355,14 @@
       </div>
     </div>
   </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+      <button id="interior-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
     </div>
-  </div>
-</section>
 
-<!-- ======== 8단계 : 차량 외부 관리 실태 ======== -->
-<section id="p7" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <p class="top-eyebrow">7 / 7</p>
-    <h1 class="top-title">차량 외부 관리 실태를<br>확인해 주세요</h1>
-  </div>
-  <div id="exterior-checks" class="step-body check-list">
+
+    <div id="exterior-section" class="reveal follow-block page-follow check-section" hidden>
+      <p class="top-eyebrow">7 / 7</p>
+    <h2 class="follow-title">차량 외부 관리 실태를<br>확인해 주세요</h2>
+  <div id="exterior-checks" class="check-list">
     <div class="check-item" data-check="accident">
       <p class="check-item-title"><span class="check-item-no">1</span>외부 사고 흔적 유무</p>
       <div class="option-grid cols-2">
@@ -429,7 +373,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="accident" rows="2" maxlength="100" placeholder="예) 왼쪽 문에 긁힌 자국이 있어요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="accident" rows="1" maxlength="100" placeholder="예) 왼쪽 문에 긁힌 자국이 있어요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -454,7 +398,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="tire" rows="2" maxlength="100" placeholder="예) 앞바퀴 공기가 부족해요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="tire" rows="1" maxlength="100" placeholder="예) 앞바퀴 공기가 부족해요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -479,7 +423,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="wiper" rows="2" maxlength="100" placeholder="예) 와이퍼가 잘 움직이지 않아요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="wiper" rows="1" maxlength="100" placeholder="예) 와이퍼가 잘 움직이지 않아요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -504,7 +448,7 @@
         <div class="problem-box">
           <label class="field">
             <span class="field-label">어떤 문제가 있나요?</span>
-            <textarea class="field-input field-textarea" data-note="etc" rows="2" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
+            <textarea class="field-input field-textarea" data-note="etc" rows="1" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
             <span class="field-counter">0 / 100</span>
           </label>
           <label class="photo-btn">
@@ -527,26 +471,23 @@
       </div>
     </div>
   </div>
-  <div class="bottom-cta">
-    <div class="summary" data-summary></div>
-    <div class="cta-row">
-      <button class="btn btn-secondary" type="button" data-prev>이전</button>
-      <button class="btn btn-primary" type="button" data-next disabled>다음</button>
+      <button id="exterior-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+    </div>
+
+
+    <div id="review-section" class="reveal follow-block page-follow" hidden>
+      <h2 class="follow-title">제출하기 전에<br>확인해 주세요</h2>
+      <p class="top-desc">고칠 내용이 있으면 '수정'을 눌러 주세요.</p>
+      <ul id="review-list" class="review-list"></ul>
     </div>
   </div>
-</section>
 
-<!-- ======== 제출 전 확인 ======== -->
-<section id="p-review" class="page" data-nav="back" data-title="자가점검">
-  <div class="top">
-    <h1 class="top-title">제출하기 전에<br>확인해 주세요</h1>
-    <p class="top-desc">고칠 내용이 있으면 '수정'을 눌러 주세요.</p>
-  </div>
-  <div class="step-body">
-    <ul id="review-list" class="review-list"></ul>
-  </div>
   <div class="bottom-cta">
-    <div class="cta-row">
+    <div class="summary" data-summary></div>
+    <div class="cta-row" id="flow-prev-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    </div>
+    <div class="cta-row" id="flow-submit-row" hidden>
       <button class="btn btn-secondary" type="button" data-prev>이전</button>
       <button id="submit-btn" class="btn btn-primary" type="button">제출하기</button>
     </div>
@@ -588,6 +529,6 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="header.js?v=20261012f"></script>
-<script src="app.js?v=20261013c"></script>
+<script src="app.js?v=20261014g"></script>
 </body>
 </html>
