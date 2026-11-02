@@ -1,0 +1,3028 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MDCS 사용법 체험 · 복장 단계부터</title>
+<base href="https://busanbus.github.io/MDCS2/">
+
+<!-- 기본 메타 태그 -->
+<meta name="description" content="부산 세진여객 운전기사 운행전 자가점검시스템">
+<meta name="theme-color" content="#3182F6">
+
+<!-- PWA 메타 태그 (주석처리) -->
+<!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+<!-- <meta name="apple-mobile-web-app-status-bar-style" content="default"> -->
+<!-- <meta name="apple-mobile-web-app-title" content="세진여객 점검"> -->
+
+<!-- PWA 아이콘 (주석처리) -->
+<!-- <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png"> -->
+<!-- <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png"> -->
+<!-- <link rel="apple-touch-icon" href="/icons/icon-192x192.png"> -->
+<!-- <link rel="manifest" href="/manifest.json"> -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap">
+<style>/* =========================================================
+   MDCS 운행전 자가점검시스템
+   Toss Design System(TDS) 기반 스타일
+   ========================================================= */
+
+/* ======== 디자인 토큰 ======== */
+:root {
+  --grey-50: #F9FAFB;
+  --grey-100: #F2F4F6;
+  --grey-200: #E5E8EB;
+  --grey-300: #D1D6DB;
+  --grey-400: #B0B8C1;
+  --grey-500: #8B95A1;
+  --grey-600: #6B7684;
+  --grey-700: #4E5968;
+  --grey-800: #333D4B;
+  --grey-900: #191F28;
+
+  --blue-50: #E8F3FF;
+  --blue-100: #C9E2FF;
+  --blue-500: #3182F6;
+  --blue-600: #2272EB;
+  --blue-700: #1B64DA;
+
+  --red-50: #FFEEEE;
+  --red-500: #F04452;
+  --red-600: #E42939;
+
+  --radius-s: 12px;
+  --radius-m: 16px;
+  --radius-l: 20px;
+
+  --nav-height: 56px;
+  --cta-height: 56px;
+  --frame-width: 375px;
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --font: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ======== 기본 ======== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  background: var(--grey-200);
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
+  font-family: var(--font);
+  line-height: 1.5;
+  color: var(--grey-900);
+  background: #fff;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+}
+
+body[data-tone="grey"] {
+  background: var(--grey-100);
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+
+/* ======== 스플래시 ======== */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-500);
+  color: #fff;
+  text-align: center;
+  font-family: var(--font);
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 32px;
+}
+
+.splash-logo-wrap {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 16px 40px rgba(0, 30, 80, 0.25);
+}
+
+.splash-logo-wrap img {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+}
+
+.splash-title {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.splash-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.splash-subtitle-kr {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  opacity: 1;
+}
+
+.splash-overlay.fade-out {
+  animation: splashFadeOut 1.2s var(--ease) forwards;
+}
+
+@keyframes splashFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ======== 상단 내비게이션 ======== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: #fff;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.nav-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 8px;
+  border-radius: var(--radius-s);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--grey-900);
+  white-space: nowrap;
+}
+
+.nav-logo {
+  height: 22px;
+  width: auto;
+}
+
+.nav .nav-back {
+  display: none;
+  position: relative;
+  z-index: 1;
+}
+
+.nav[data-mode="back"] .nav-back {
+  display: inline-flex;
+}
+
+.nav-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--grey-100);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.nav.has-progress .nav-progress {
+  opacity: 1;
+}
+
+.nav-progress-bar {
+  width: 0;
+  height: 100%;
+  background: var(--blue-500);
+  border-radius: 0 3px 3px 0;
+  transition: width 0.4s var(--ease);
+}
+
+/* ======== 버튼 ======== */
+.icon-btn {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-s);
+  color: var(--grey-900);
+  transition: background 0.15s;
+}
+
+.icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-btn:active,
+.nav-brand:active {
+  background: rgba(2, 32, 71, 0.06);
+}
+
+.icon-btn-spacer {
+  flex: 0 0 auto;
+  width: 44px;
+}
+
+.btn {
+  width: 100%;
+  height: var(--cta-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  border-radius: var(--radius-m);
+  font-size: 18px;
+  font-weight: 700;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--blue-500);
+  color: #fff;
+}
+
+.btn-primary:active:not(:disabled) {
+  background: var(--blue-700);
+}
+
+.btn-primary:disabled {
+  background: var(--blue-100);
+}
+
+.btn-secondary {
+  background: var(--grey-100);
+  color: var(--grey-700);
+}
+
+.btn-secondary:active {
+  background: var(--grey-200);
+}
+
+.btn.is-loading,
+.btn.is-loading:disabled {
+  position: relative;
+  background: var(--blue-500);
+  color: transparent;
+}
+
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.text-btn {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  margin: -8px -10px -8px 0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--blue-500);
+  transition: background 0.15s;
+}
+
+.text-btn:active {
+  background: var(--blue-50);
+}
+
+.bottom-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff 20px);
+  pointer-events: none;
+}
+
+.bottom-cta > * {
+  pointer-events: auto;
+}
+
+.cta-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cta-row .btn {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+}
+
+body[data-tone="grey"] .bottom-cta {
+  background: linear-gradient(to bottom, rgba(242, 244, 246, 0), var(--grey-100) 20px);
+}
+
+/* ======== 페이지 ======== */
+.page {
+  display: none;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--nav-height) 0 calc(168px + env(safe-area-inset-bottom));
+}
+
+.page.active {
+  display: block;
+}
+
+.page.enter-forward > :not(.bottom-cta) {
+  animation: pageInForward 0.32s var(--ease);
+}
+
+.page.enter-back > :not(.bottom-cta) {
+  animation: pageInBack 0.32s var(--ease);
+}
+
+/* ======== Top (단계 제목) ======== */
+.top {
+  padding: 20px 24px 0;
+}
+
+.top-eyebrow {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--blue-500);
+}
+
+.top-title {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.38;
+  letter-spacing: -0.3px;
+  color: var(--grey-900);
+}
+
+.top-desc {
+  margin-top: 8px;
+  font-size: 17px;
+  color: var(--grey-700);
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.summary:empty {
+  display: none;
+}
+
+.summary-chip {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--grey-100);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--grey-700);
+}
+
+.step-body {
+  padding: 28px 24px 0;
+}
+
+.section-label {
+  margin: 20px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--grey-600);
+}
+
+.empty-state {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 16px;
+  color: var(--grey-500);
+}
+
+/* ======== 선택 타일 ======== */
+.option-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.option-tile {
+  min-height: 64px;
+  padding: 10px 6px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-m);
+  background: var(--grey-100);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--grey-800);
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.option-tile.tall {
+  min-height: 120px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.option-tile.compact {
+  min-height: 56px;
+  font-size: 18px;
+}
+
+.option-tile:active,
+.option-row:active {
+  transform: scale(0.97);
+}
+
+.option-tile.selected {
+  background: var(--blue-50);
+  border-color: var(--blue-500);
+  color: var(--blue-600);
+}
+
+.option-tile.danger.selected {
+  background: var(--red-50);
+  border-color: var(--red-500);
+  color: var(--red-600);
+}
+
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.check-section .follow-title {
+  margin-bottom: 22px;
+  font-size: 24px;
+}
+
+.check-item-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.2px;
+  color: var(--grey-900);
+}
+
+.check-item-no {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--blue-500);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.check-list .option-grid {
+  gap: 8px;
+}
+
+.check-list .option-tile.compact {
+  min-height: 48px;
+  padding: 8px 4px;
+  font-size: 16px;
+}
+
+.check-item .reveal {
+  margin-top: 10px;
+}
+
+.problem-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+  padding: 10px 12px 8px;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  background: var(--grey-100);
+}
+
+.problem-box:focus-within {
+  box-shadow: inset 0 0 0 2px var(--blue-500);
+}
+
+.problem-box .field {
+  display: contents;
+}
+
+.problem-box .field-label {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.problem-box .field-input,
+.problem-box .field-input:focus {
+  grid-column: 1 / -1;
+  min-height: 0;
+  padding: 4px 2px 0;
+  border-color: transparent;
+  border-radius: 0;
+  background: transparent;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.check-item .field-textarea {
+  min-height: 42px;
+}
+
+.problem-box .field-counter {
+  grid-column: 1;
+  align-self: center;
+  margin: 0;
+  padding: 0;
+}
+
+.photo-btn {
+  position: relative;
+  grid-column: 2;
+  width: auto;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--blue-600);
+  box-shadow: inset 0 0 0 1.5px var(--blue-500);
+}
+
+.photo-btn:active {
+  background: var(--blue-50);
+}
+
+.photo-icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-500);
+}
+
+.photo-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.photo-btn-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue-600);
+}
+
+.photo-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+.photo-preview {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0 2px;
+}
+
+.photo-preview[hidden] {
+  display: none;
+}
+
+.photo-preview img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* ======== 선택 목록 (라디오형) ======== */
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-row {
+  width: 100%;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-m);
+  background: var(--grey-100);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--grey-800);
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.option-row.selected {
+  background: var(--blue-50);
+  border-color: var(--blue-500);
+  color: var(--blue-600);
+}
+
+.option-row.danger.selected {
+  background: var(--red-50);
+  border-color: var(--red-500);
+  color: var(--red-600);
+}
+
+.radio {
+  position: relative;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--grey-300);
+  border-radius: 50%;
+  background: #fff;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.option-row.selected .radio {
+  border-color: currentColor;
+  background: currentColor;
+}
+
+.option-row.selected .radio::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 7px;
+  height: 12px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.reveal {
+  margin-top: 20px;
+  animation: reveal 0.28s var(--ease);
+}
+
+.follow-block {
+  margin-top: 36px;
+}
+
+.page-follow {
+  min-height: calc(100svh - var(--nav-height));
+}
+
+.follow-title {
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.38;
+  letter-spacing: -0.3px;
+}
+
+.continue-btn {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.plate-scroll {
+  max-height: 200px;
+  margin-top: 4px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#plate-grid .option-tile,
+#plate-recent-grid .option-tile {
+  min-height: 44px;
+  padding: 6px 4px;
+  font-size: 17px;
+}
+
+.plate-scroll .section-label {
+  margin-top: 8px;
+}
+
+.field-textarea.health-note {
+  min-height: 72px;
+}
+
+.health-reset {
+  display: block;
+  margin: 12px auto 0;
+}
+
+/* ======== 입력 ======== */
+.field {
+  display: block;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--grey-700);
+}
+
+.field-input {
+  width: 100%;
+  min-height: 60px;
+  padding: 16px 18px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-m);
+  background: var(--grey-100);
+  font-size: 19px;
+  color: var(--grey-900);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.field-input::placeholder {
+  color: var(--grey-400);
+}
+
+.field-input:focus {
+  border-color: var(--blue-500);
+  background: #fff;
+}
+
+.field-textarea {
+  min-height: 112px;
+  font-size: 17px;
+  line-height: 1.5;
+  resize: none;
+}
+
+.field-counter {
+  display: block;
+  margin-top: 6px;
+  text-align: right;
+  font-size: 14px;
+  color: var(--grey-500);
+}
+
+.search-wrap {
+  position: sticky;
+  top: var(--nav-height);
+  z-index: 5;
+  margin: -12px -24px 0;
+  padding: 12px 24px;
+  background: #fff;
+}
+
+.search-field {
+  position: relative;
+  display: block;
+}
+
+.search-field svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  transform: translateY(-50%);
+  color: var(--grey-500);
+  pointer-events: none;
+}
+
+.search-field .field-input {
+  min-height: 52px;
+  padding: 12px 16px 12px 48px;
+  font-size: 18px;
+}
+
+/* ======== 안내 박스 ======== */
+.callout {
+  display: flex;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-m);
+  text-align: left;
+}
+
+.callout svg {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+}
+
+.callout-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.callout-desc {
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--grey-700);
+}
+
+.callout.danger {
+  background: var(--red-50);
+  color: var(--red-600);
+}
+
+/* ======== 메인 화면 ======== */
+.landing {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: calc(100svh - var(--nav-height) - 104px - env(safe-area-inset-bottom));
+  padding: 4px 20px 0;
+}
+
+.landing-greeting {
+  padding: 8px 4px 0;
+}
+
+.landing-date {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--grey-600);
+}
+
+.landing-hello {
+  margin-top: 4px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
+  color: var(--grey-900);
+}
+
+.banner {
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  background: #163E86;
+}
+
+.banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.section-card {
+  padding: 4px 0 8px;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-l);
+  background: #fff;
+}
+
+.landing .section-card {
+  margin-top: auto;
+}
+
+.landing .list-header {
+  margin-bottom: 0;
+  padding: 6px 0;
+}
+
+.landing .list-row {
+  gap: 12px;
+  padding: 8px 16px;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 20px 4px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.list-header .icon-btn {
+  margin-right: -10px;
+  color: var(--grey-600);
+}
+
+.list-header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.list {
+  list-style: none;
+}
+
+.list-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.list-row:active {
+  background: var(--grey-100);
+}
+
+.list-row-icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-s);
+  background: var(--blue-50);
+  color: var(--blue-500);
+}
+
+.list-row-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.list-row-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--grey-800);
+}
+
+.list-row-arrow {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--grey-400);
+}
+
+.list-row-arrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ======== 제출 전 확인 ======== */
+.review-list {
+  list-style: none;
+  padding: 4px 20px;
+  border-radius: var(--radius-l);
+  background: var(--grey-50);
+  border: 1px solid var(--grey-100);
+}
+
+.review-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.review-row + .review-row {
+  border-top: 1px solid var(--grey-200);
+}
+
+.review-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--grey-600);
+}
+
+.review-value {
+  display: block;
+  margin-top: 2px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.review-value.warn {
+  color: var(--red-500);
+}
+
+.review-detail {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--grey-700);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* ======== 완료 ======== */
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 0;
+  text-align: center;
+}
+
+.result-icon {
+  width: 88px;
+  height: 88px;
+}
+
+.result-icon circle {
+  fill: var(--blue-500);
+  transform-origin: center;
+  animation: pop 0.45s var(--ease) both;
+}
+
+.result-icon path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: draw 0.35s 0.3s var(--ease) forwards;
+}
+
+.result-title {
+  margin-top: 24px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.result-desc {
+  margin-top: 8px;
+  font-size: 17px;
+  color: var(--grey-700);
+}
+
+.result-card {
+  width: 100%;
+  margin-top: 36px;
+  padding: 4px 20px;
+  border-radius: var(--radius-l);
+  background: var(--grey-50);
+  border: 1px solid var(--grey-100);
+  text-align: left;
+}
+
+.result-card div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  font-size: 16px;
+}
+
+.result-card div + div {
+  border-top: 1px solid var(--grey-200);
+}
+
+.result-card dt {
+  color: var(--grey-600);
+}
+
+.result-card dd {
+  font-weight: 600;
+  color: var(--grey-900);
+}
+
+.result .callout {
+  width: 100%;
+  margin-top: 16px;
+}
+
+/* ======== 공지 이미지 보기 ======== */
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  background: var(--grey-100);
+  animation: sheetUp 0.3s var(--ease);
+}
+
+.viewer-bar {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: #fff;
+}
+
+.viewer-title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viewer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.viewer-body img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-s);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 23, 51, 0.06);
+}
+
+/* ======== 토스트 ======== */
+.toast {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
+  z-index: 600;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(25, 31, 40, 0.92);
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s var(--ease);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: none;
+}
+
+/* ======== 마우스 환경 hover ======== */
+@media (hover: hover) {
+  .icon-btn:hover,
+  .nav-brand:hover {
+    background: rgba(2, 32, 71, 0.05);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--blue-600);
+  }
+
+  .btn-secondary:hover {
+    background: var(--grey-200);
+  }
+
+  .option-tile:not(.selected):hover,
+  .option-row:not(.selected):hover {
+    background: var(--grey-200);
+  }
+
+  .list-row:hover {
+    background: var(--grey-50);
+  }
+}
+
+/* ======== 애니메이션 ======== */
+@keyframes pageInForward {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pageInBack {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sheetUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ======== PC: 모바일 너비(375px) 프레임 유지 ======== */
+@media (min-width: 768px) {
+  body {
+    position: relative;
+    max-width: var(--frame-width);
+    margin: 0 auto;
+    box-shadow: 0 0 0 1px rgba(0, 23, 51, 0.04), 0 8px 40px rgba(0, 23, 51, 0.08);
+  }
+
+  .nav,
+  .bottom-cta,
+  .viewer {
+    left: calc(50% - var(--frame-width) / 2);
+    right: auto;
+    width: var(--frame-width);
+  }
+
+  .toast {
+    left: calc(50% - var(--frame-width) / 2 + 20px);
+    right: auto;
+    width: calc(var(--frame-width) - 40px);
+  }
+}
+</style>
+<style>
+body.demo-mode { --nav-height: 124px; }
+.demo-mode .nav { height:56px; }
+.demo-banner { max-width:420px; margin:0 auto; }
+.demo-banner { position:fixed; top:56px; left:0; right:0; z-index:101; background:#e8f2ff; border-bottom:1px solid #c5ddff; padding:10px 16px; color:#17477e; font-size:13px; line-height:1.55; }
+.demo-banner strong { display:block; font-size:15px; }
+#site-head, #site-options, #route-section { display:none !important; }
+#p0 .step-body > #uniform-section { margin-top:0; }
+#splash { display:none !important; }
+@media (max-width:380px) { body.demo-mode { --nav-height:144px; } }
+</style></head>
+<body class="demo-mode">
+
+<!-- ======== 스플래시 ======== -->
+<div id="splash" class="splash-overlay">
+  <div class="splash-content">
+    <div class="splash-logo-wrap">
+      <img src="logo1.png" alt="MDCS 로고">
+    </div>
+    <div class="splash-title">MDCS</div>
+    <div class="splash-subtitle splash-subtitle-kr">운행 전 자가점검시스템</div>
+    <div class="splash-subtitle">(Mobile Drive Pre-Care System)</div>
+  </div>
+</div>
+
+<!-- ======== 상단 내비게이션 (header.js) ======== -->
+<div id="header-container"></div>
+<aside class="demo-banner" role="note"><strong>사용법 체험 · 복장 단계부터 시작</strong>예시 정보로 진행합니다. 입력 내용과 사진은 서버에 전송되지 않습니다.</aside>
+
+<!-- ======== 메인 화면 ======== -->
+<section id="p-landing" class="page" data-nav="brand">
+  <div class="landing">
+    <div class="landing-greeting">
+      <p id="landing-date" class="landing-date"></p>
+      <h1 id="landing-hello" class="landing-hello">안녕하세요,<br>기사님</h1>
+    </div>
+
+    <div class="banner">
+      <img src="images/mdcs-banner-163e86.jpg" alt="안전하고 친절한 운행의 시작! 모바일 운행전 점검시스템 MDCS">
+    </div>
+
+    <section class="section-card" aria-labelledby="notice-heading">
+      <div class="list-header">
+        <h2 id="notice-heading" class="list-header-title">공지사항</h2>
+        <button id="notice-board-open" class="icon-btn" type="button" aria-label="공지사항 전체 보기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <ul id="landing-notice-list" class="list"></ul>
+    </section>
+  </div>
+
+  <div class="bottom-cta">
+    <button id="landing-start-btn" class="btn btn-primary" type="button">자가점검 시작하기</button>
+  </div>
+</section>
+
+<!-- ======== 공지사항 전체 ======== -->
+<section id="p-board" class="page" data-nav="back" data-title="공지사항" data-tone="grey">
+  <div class="landing">
+    <section class="section-card">
+      <ul id="board-notice-list" class="list"></ul>
+    </section>
+  </div>
+</section>
+
+<!-- ======== 기사님 이름 ======== -->
+<section id="p-driver-name" class="page" data-nav="back" data-title="자가점검">
+  <div class="top">
+    <h1 class="top-title">기사님 성함을<br>알려주세요</h1>
+    <p class="top-desc">처음 한 번만 입력하면 다음부터는 바로 시작해요.</p>
+  </div>
+  <div class="step-body">
+    <label class="field">
+      <span class="field-label">이름</span>
+      <input id="driver-name-input" class="field-input" type="text" placeholder="예) 홍길동" maxlength="20" autocomplete="off">
+    </label>
+  </div>
+  <div class="bottom-cta">
+    <div class="cta-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button id="driver-name-submit" class="btn btn-primary" type="button" disabled>다음</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== 1단계 : 근무지, 이어서 2단계 노선 ======== -->
+<section id="p0" class="page" data-nav="back" data-title="자가점검">
+  <div class="top" id="site-head">
+    <p class="top-eyebrow">1 / 7</p>
+    <h1 class="top-title">오늘 근무하는 곳을<br>선택해 주세요</h1>
+  </div>
+  <div class="step-body">
+    <div id="site-options" class="option-grid cols-2">
+      <button class="option-tile tall" type="button" data-value="노포" aria-pressed="false">노포</button>
+      <button class="option-tile tall" type="button" data-value="정관" aria-pressed="false">정관</button>
+    </div>
+    <div id="route-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">2 / 7</p>
+      <h2 class="follow-title">운행할 노선을<br>선택해 주세요</h2>
+      <div id="busno-options" class="option-grid cols-3"></div>
+      <div id="plate-section" class="reveal follow-block" hidden>
+        <h2 class="follow-title">차량번호를 선택해 주세요.</h2>
+        <div class="search-wrap">
+          <label class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="plate-filter" class="field-input" type="text" inputmode="numeric" maxlength="4" placeholder="차량번호 숫자로 검색" autocomplete="off" aria-label="차량번호 검색">
+          </label>
+        </div>
+        <div id="plate-recent" hidden>
+          <p class="section-label">최근 선택</p>
+          <div id="plate-recent-grid" class="option-grid cols-3"></div>
+        </div>
+        <div class="plate-scroll">
+          <p id="plate-all-label" class="section-label">전체 차량</p>
+          <div id="plate-grid" class="option-grid cols-3"></div>
+          <p id="plate-empty" class="empty-state" hidden>검색한 차량번호가 없어요.</p>
+        </div>
+      </div>
+    </div>
+    <div id="uniform-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">3 / 7</p>
+    <h2 class="follow-title">복장 상태는<br>어떤가요?</h2>
+  
+    <div id="uniform-options" class="option-list">
+      <button class="option-row" type="button" data-value="ok" aria-pressed="false">양호해요<span class="radio" aria-hidden="true"></span></button>
+      <button class="option-row" type="button" data-value="bad" aria-pressed="false">불량이에요<span class="radio" aria-hidden="true"></span></button>
+    </div>
+    <div id="uniform-reason-wrap" class="reveal" hidden>
+      <label class="field">
+        <span class="field-label">어떤 점이 불량인가요?</span>
+        <textarea id="reason-input" class="field-input field-textarea" rows="3" maxlength="100" placeholder="예) 넥타이를 착용하지 못했어요" autocomplete="off"></textarea>
+        <span id="reason-counter" class="field-counter">0 / 100</span>
+      </label>
+    </div>
+      <button id="uniform-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+    </div>
+
+
+    <div id="health-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">4 / 7</p>
+    <h2 class="follow-title">오늘 몸 상태는<br>어떤가요?</h2>
+  
+    <div id="health-options" class="option-list">
+      <button class="option-row" type="button" data-value="ok" aria-pressed="false">양호해요<span class="radio" aria-hidden="true"></span></button>
+      <button class="option-row" type="button" data-value="symptom" aria-pressed="false">증상이 있어요<span class="radio" aria-hidden="true"></span></button>
+    </div>
+    <div id="health-detail-wrap" class="reveal" hidden>
+      <p id="health-detail-label" class="section-label">어떤 증상인가요?</p>
+      <div id="health-chips" class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-value="몸살" aria-pressed="false">몸살</button>
+        <button class="option-tile compact" type="button" data-value="감기" aria-pressed="false">감기</button>
+        <button class="option-tile compact" type="button" data-value="장염" aria-pressed="false">장염</button>
+        <button class="option-tile compact" type="button" data-value="기타" aria-pressed="false">기타</button>
+      </div>
+      <div id="health-custom-wrap" class="reveal" hidden>
+        <label class="field">
+          <span class="field-label">증상을 적어 주세요</span>
+          <textarea id="health-custom" class="field-input field-textarea health-note" rows="2" maxlength="100" placeholder="예) 두통이 있어요" autocomplete="off"></textarea>
+          <span id="health-counter" class="field-counter">0 / 100</span>
+        </label>
+        <button id="health-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+        <button id="health-chip-reset" class="text-btn health-reset" type="button">다른 증상 고르기</button>
+      </div>
+    </div>
+    </div>
+
+
+    <div id="alcohol-section" class="reveal follow-block page-follow" hidden>
+      <p class="top-eyebrow">5 / 7</p>
+    <h2 class="follow-title">24시간 내에<br>술을 마셨나요?</h2>
+  
+    <div id="alcohol-options" class="option-list">
+      <button class="option-row" type="button" data-value="no" aria-pressed="false">아니요, 마시지 않았어요<span class="radio" aria-hidden="true"></span></button>
+      <button class="option-row danger" type="button" data-value="yes" aria-pressed="false">예, 마셨어요<span class="radio" aria-hidden="true"></span></button>
+    </div>
+    <div id="alcohol-warning" class="callout danger reveal" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <div>
+        <p class="callout-title">반드시 관리자에게 알려 주세요</p>
+        <p class="callout-desc">관리자에게 문의한 뒤 음주 측정을 진행해 주세요.</p>
+      </div>
+    </div>
+      <button id="alcohol-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+    </div>
+
+
+    <div id="interior-section" class="reveal follow-block page-follow check-section" hidden>
+      <p class="top-eyebrow">6 / 7</p>
+    <h2 class="follow-title">차량 내부 관리 실태를<br>확인해 주세요</h2>
+  <div id="vehicle-checks" class="check-list">
+    <div class="check-item" data-check="cctv">
+      <p class="check-item-title"><span class="check-item-no">1</span>CCTV 작동 및 관리상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="cctv" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="cctv" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="cctv" rows="1" maxlength="100" placeholder="예) 화면이 나오지 않아요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="cctv" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="cctv" hidden>
+            <img alt="CCTV 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="cctv">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="terminal">
+      <p class="check-item-title"><span class="check-item-no">2</span>단말기 작동 상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="terminal" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="terminal" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="terminal" rows="1" maxlength="100" placeholder="예) 단말기가 켜지지 않아요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="terminal" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="terminal" hidden>
+            <img alt="단말기 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="terminal">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="energy">
+      <p class="check-item-title"><span class="check-item-no">3</span>에너지(배터리, CNG) 잔여량</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="energy" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="energy" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="energy" rows="1" maxlength="100" placeholder="예) CNG가 거의 없어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="energy" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="energy" hidden>
+            <img alt="에너지 잔여량 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="energy">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="dashboard">
+      <p class="check-item-title"><span class="check-item-no">4</span>계기판(경고등)</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="dashboard" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="dashboard" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="dashboard" rows="1" maxlength="100" placeholder="예) 경고등이 켜져 있어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="dashboard" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="dashboard" hidden>
+            <img alt="계기판 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="dashboard">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="suspension">
+      <p class="check-item-title"><span class="check-item-no">5</span>에어서스펜션 상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="suspension" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="suspension" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="suspension" rows="1" maxlength="100" placeholder="예) 한쪽이 내려가 있어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="suspension" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="suspension" hidden>
+            <img alt="에어서스펜션 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="suspension">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="etc">
+      <p class="check-item-title"><span class="check-item-no">6</span>기타</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="etc" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="etc" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="etc" rows="1" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="etc" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="etc" hidden>
+            <img alt="기타 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="etc">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      <button id="interior-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+    </div>
+
+
+    <div id="exterior-section" class="reveal follow-block page-follow check-section" hidden>
+      <p class="top-eyebrow">7 / 7</p>
+    <h2 class="follow-title">차량 외부 관리 실태를<br>확인해 주세요</h2>
+  <div id="exterior-checks" class="check-list">
+    <div class="check-item" data-check="accident">
+      <p class="check-item-title"><span class="check-item-no">1</span>외부 사고 흔적 유무</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="accident" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="accident" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="accident" rows="1" maxlength="100" placeholder="예) 왼쪽 문에 긁힌 자국이 있어요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="accident" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="accident" hidden>
+            <img alt="외부 사고 흔적 사진">
+            <button class="text-btn" type="button" data-photo-clear="accident">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="tire">
+      <p class="check-item-title"><span class="check-item-no">2</span>타이어 공기압 및 상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="tire" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="tire" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="tire" rows="1" maxlength="100" placeholder="예) 앞바퀴 공기가 부족해요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="tire" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="tire" hidden>
+            <img alt="타이어 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="tire">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="wiper">
+      <p class="check-item-title"><span class="check-item-no">3</span>와이퍼 작동상태</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="wiper" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="wiper" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="wiper" rows="1" maxlength="100" placeholder="예) 와이퍼가 잘 움직이지 않아요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="wiper" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="wiper" hidden>
+            <img alt="와이퍼 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="wiper">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="check-item" data-check="etc">
+      <p class="check-item-title"><span class="check-item-no">4</span>기타</p>
+      <div class="option-grid cols-2">
+        <button class="option-tile compact" type="button" data-item="etc" data-value="ok" aria-pressed="false">문제 없음</button>
+        <button class="option-tile compact danger" type="button" data-item="etc" data-value="bad" aria-pressed="false">문제 있음</button>
+      </div>
+      <div class="reveal" hidden>
+        <div class="problem-box">
+          <label class="field">
+            <span class="field-label">어떤 문제가 있나요?</span>
+            <textarea class="field-input field-textarea" data-note="etc" rows="1" maxlength="100" placeholder="다른 이상을 적어 주세요" autocomplete="off"></textarea>
+            <span class="field-counter">0 / 100</span>
+          </label>
+          <label class="photo-btn">
+            <span class="photo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+            <span class="photo-btn-title">사진 촬영</span>
+            <input class="photo-input" data-photo="etc" type="file" accept="image/*" capture="environment">
+          </label>
+          <div class="photo-preview" data-photo-preview="etc" hidden>
+            <img alt="기타 외부 문제 사진">
+            <button class="text-btn" type="button" data-photo-clear="etc">사진 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="exterior-alert" class="callout danger" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <div>
+        <p id="exterior-alert-title" class="callout-title"></p>
+        <p id="exterior-alert-desc" class="callout-desc"></p>
+      </div>
+    </div>
+  </div>
+      <button id="exterior-continue" class="btn btn-primary continue-btn" type="button" hidden>이어서 진행하기</button>
+    </div>
+
+
+    <div id="review-section" class="reveal follow-block page-follow" hidden>
+      <h2 class="follow-title">체험한 내용을<br>확인해 주세요</h2>
+      <p class="top-desc">고칠 내용이 있으면 '수정'을 눌러 주세요.</p>
+      <ul id="review-list" class="review-list"></ul>
+    </div>
+  </div>
+
+  <div class="bottom-cta">
+    <div class="summary" data-summary></div>
+    <div class="cta-row" id="flow-prev-row">
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+    </div>
+    <div class="cta-row" id="flow-submit-row" hidden>
+      <button class="btn btn-secondary" type="button" data-prev>이전</button>
+      <button id="submit-btn" class="btn btn-primary" type="button">체험 마치기</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== 완료 ======== -->
+<section id="done" class="page" data-nav="brand">
+  <div class="result">
+    <svg class="result-icon" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="44"/><path d="M27 45l11 11 23-24"/></svg>
+    <h1 class="result-title">체험을 마쳤어요</h1>
+    <p class="result-desc">실제 점검은 저장되지 않았습니다. 실제 이용 시에는 이름과 근무·차량정보부터 입력합니다.</p>
+    <dl id="result-card" class="result-card"></dl>
+    <div id="done-alert" class="callout danger" role="alert" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+      <div>
+        <p class="callout-title">운행 전에 관리자에게 알려 주세요</p>
+        <p class="callout-desc">24시간 안에 음주했다고 답했어요. 음주 측정을 진행해 주세요.</p>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-cta">
+    <button id="done-home-btn" class="btn btn-primary" type="button">다시 체험하기</button>
+  </div>
+</section>
+
+<!-- ======== 공지 이미지 보기 ======== -->
+<div id="notice-viewer" class="viewer" role="dialog" aria-modal="true" aria-labelledby="notice-viewer-title" hidden>
+  <div class="viewer-bar">
+    <button id="notice-viewer-close" class="icon-btn" type="button" aria-label="닫기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p id="notice-viewer-title" class="viewer-title"></p>
+    <span class="icon-btn-spacer" aria-hidden="true"></span>
+  </div>
+  <div id="notice-viewer-body" class="viewer-body"></div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>// ======== 상단 내비게이션 컴포넌트 ========
+// 모든 화면: 흰색 배경 + 로고 + '운행전 자가점검시스템'
+// 내부 화면만 왼쪽에 뒤로가기, 점검 단계는 하단 진행 막대
+function createHeader() {
+  const header = document.createElement('header');
+  header.id = 'app-nav';
+  header.className = 'nav';
+  header.dataset.mode = 'brand';
+  header.innerHTML = `
+    <button id="nav-back" class="icon-btn nav-back" type="button" aria-label="뒤로 가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button id="nav-brand" class="nav-brand" type="button" aria-label="처음 화면으로">
+      <img class="nav-logo" src="logo.png" alt="세진여객 로고">
+      <span>운행전 자가점검시스템</span>
+    </button>
+    <div class="nav-progress" aria-hidden="true"><div id="nav-progress-bar" class="nav-progress-bar"></div></div>
+  `;
+  return header;
+}
+
+function setNav({ mode = 'back', progress = null } = {}) {
+  const nav = document.getElementById('app-nav');
+  if (!nav) return;
+  nav.dataset.mode = mode;
+
+  const hasProgress = typeof progress === 'number';
+  nav.classList.toggle('has-progress', hasProgress);
+  document.getElementById('nav-progress-bar').style.width = hasProgress ? `${Math.round(progress * 100)}%` : '0%';
+}
+
+function initHeader() {
+  const headerContainer = document.getElementById('header-container');
+  if (!headerContainer) return;
+  headerContainer.appendChild(createHeader());
+
+  document.getElementById('nav-back').addEventListener('click', () => {
+    if (typeof navigateBack === 'function') navigateBack();
+  });
+  document.getElementById('nav-brand').addEventListener('click', () => {
+    if (typeof goToInitialPage === 'function') goToInitialPage();
+  });
+}
+</script>
+<script>// ======== 스플래시 설정 ========
+const SPLASH_AUTO_HIDE_DELAY = 1200; // ms: 자동 페이드 시작 대기시간
+const SPLASH_FADE_DURATION = 1200;   // ms: 페이드 시간 (styles.css 애니메이션과 동일)
+const SPLASH_DEBUG_HOLD = false;      // true면 자동 숨김 안 하고, 탭 시에만 닫힘 (디버그용)
+
+// ======== 상수 ========
+const DRIVER_NAME_KEY = 'mdcsDriverName';
+const LAST_PLATE_KEY = 'mdcsLastPlate';
+
+const BUSNO_LIST = {
+  '노포': ['29', '80', '300'],
+  '정관': ['73', '73 (오전)', '106', '107', '184', '188']
+};
+
+const NOTICES = [
+  { title: '시내버스 운행계통 준수 및 운행관리 철저 안내', images: ['notice/compliance.png'] },
+  { title: '시내버스 불편 민원 교육 요청', images: ['notice/complaint.png'] },
+  { title: '규정 근무복(동복) 착용 안내', images: ['notice/uniform_request.png'] },
+  {
+    title: '독립유공자 무임승차 안내',
+    images: ['notice/free_riding01.png', 'notice/free_riding02.png', 'notice/free_riding03.png']
+  }
+];
+
+const STEP_PAGES = ['p0', 'p1', 'p3', 'p4', 'p5', 'p6', 'p7'];
+
+const VEHICLE_ITEMS = [
+  { id: 'cctv', label: 'CCTV 작동 및 관리상태' },
+  { id: 'terminal', label: '단말기 작동 상태' },
+  { id: 'energy', label: '에너지(배터리, CNG) 잔여량' },
+  { id: 'dashboard', label: '계기판(경고등)' },
+  { id: 'suspension', label: '에어서스펜션 상태' },
+  { id: 'etc', label: '기타' }
+];
+
+function createCheckState(items) {
+  return Object.fromEntries(items.map((item) => [item.id, { status: '', note: '', photo: null, photoUrl: '' }]));
+}
+
+function createVehicleState() {
+  return createCheckState(VEHICLE_ITEMS);
+}
+
+const EXTERIOR_ITEMS = [
+  { id: 'accident', label: '외부 사고 흔적 유무' },
+  { id: 'tire', label: '타이어 공기압 및 상태' },
+  { id: 'wiper', label: '와이퍼 작동상태' },
+  { id: 'etc', label: '기타' }
+];
+
+function createExteriorState() {
+  return createCheckState(EXTERIOR_ITEMS);
+}
+
+const PHOTO_MAX_EDGE = 1280;
+const PHOTO_QUALITY = 0.7;
+
+function releaseVehiclePhotos() {
+  [state.vehicle, state.exterior].forEach((bucket) => {
+    if (!bucket) return;
+    Object.values(bucket).forEach((row) => {
+      if (row && row.photoUrl) URL.revokeObjectURL(row.photoUrl);
+    });
+  });
+}
+
+async function compressPhoto(file) {
+  const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  const scale = Math.min(1, PHOTO_MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', PHOTO_QUALITY));
+  if (!blob) throw new Error('사진 용량을 줄이지 못했어요.');
+  return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+}
+const FLOW_PAGES = ['p-driver-name', ...STEP_PAGES, 'p-review', 'done'];
+
+const ICONS = {
+  document: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+  chevronRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'
+};
+
+// ======== 하드코딩된 차량번호 리스트 ========
+const HARDCODED_PLATE_NUMBERS = [
+  '3101', '3102', '3103', '3104', '3105', '3106', '3107', '3108', '3109', '3110',
+  '3111', '3112', '3113', '3114', '3115', '3116', '3117', '3118', '3119', '3120',
+  '3121', '3122', '3123', '3124', '3125', '3126', '3127', '3128', '3129', '3130',
+  '3131', '3132', '3133', '3134', '3135', '3136', '3137', '3138', '3139', '3140',
+  '3141', '3142', '3143', '3144', '3145', '3146', '3147', '3148', '3149', '3150',
+  '3151', '3152', '3153', '3154', '3155', '3156', '3157', '3158', '3159', '3160',
+  '3161', '3162', '3163', '3164', '3165', '3166', '3167', '3168', '3169', '3170',
+  '3171', '3172', '3173', '3174', '3175', '3176', '3177', '3178', '3179', '3180',
+  '3181', '3182', '3183', '3184', '3185', '3186', '3187', '3188', '3189', '3190',
+  '3191', '3192', '3193', '3194', '3195', '3196', '3197', '3198', '3199', '3200',
+  '3201', '3202', '3203', '3204', '3205', '3206', '3207', '3208', '3209', '3210',
+  '3211', '3212', '3213', '3214', '3215', '3216', '3217', '3218', '3219', '3220',
+  '3221', '3222', '3223', '3224', '3225', '3226', '3227', '3228', '3229', '3230',
+  '3300',
+  '5201', '5202', '5203', '5204', '5205', '5206', '5207', '5208', '5209', '5210',
+  '5211', '5212', '5213', '5214', '5215', '5216', '5217', '5218'
+];
+
+// ======== Storage 함수 ========
+function getDriverName() { return '체험 사용자'; }
+
+function hasDriverName() {
+  return getDriverName().length > 0;
+}
+
+function saveDriverName() { return true; }
+
+function getLastPlate() { return ''; }
+
+// ======== 점검 상태 ========
+function createEmptyState() {
+  return {
+    site: '',
+    busNo: '',
+    plate: '',
+    uniform: '',        // 'ok' | 'bad'
+    uniformReason: '',
+    health: '',         // 'ok' | 'symptom'
+    healthOption: '',   // 몸살 | 감기 | 장염 | 기타
+    healthCustom: '',
+    alcohol: '',        // 'yes' | 'no'
+    opened: {
+      uniform: false,
+      health: false,
+      alcohol: false,
+      interior: false,
+      exterior: false,
+      review: false
+    },
+    vehicle: createVehicleState(),
+    exterior: createExteriorState()
+  };
+}
+
+const state = createEmptyState();
+let session = 0;      // 점검을 새로 시작할 때마다 증가 (이전 점검의 history 항목 무효화)
+let submitted = false;
+let editDepth = 0;    // 확인 화면에서 '수정'으로 들어간 뒤 쌓인 history 수
+
+// ======== DOM 요소 ========
+const dom = {
+  landingDate: document.getElementById('landing-date'),
+  landingHello: document.getElementById('landing-hello'),
+  landingStartBtn: document.getElementById('landing-start-btn'),
+  driverNameInput: document.getElementById('driver-name-input'),
+  driverNameSubmit: document.getElementById('driver-name-submit'),
+  siteOptions: document.getElementById('site-options'),
+  routeSection: document.getElementById('route-section'),
+  busnoOptions: document.getElementById('busno-options'),
+  plateSection: document.getElementById('plate-section'),
+  plateFilter: document.getElementById('plate-filter'),
+  plateRecent: document.getElementById('plate-recent'),
+  plateRecentGrid: document.getElementById('plate-recent-grid'),
+  plateAllLabel: document.getElementById('plate-all-label'),
+  plateGrid: document.getElementById('plate-grid'),
+  plateEmpty: document.getElementById('plate-empty'),
+  uniformOptions: document.getElementById('uniform-options'),
+  uniformReasonWrap: document.getElementById('uniform-reason-wrap'),
+  reasonInput: document.getElementById('reason-input'),
+  reasonCounter: document.getElementById('reason-counter'),
+  healthOptions: document.getElementById('health-options'),
+  healthDetailWrap: document.getElementById('health-detail-wrap'),
+  healthChips: document.getElementById('health-chips'),
+  healthDetailLabel: document.getElementById('health-detail-label'),
+  healthCustomWrap: document.getElementById('health-custom-wrap'),
+  healthCustom: document.getElementById('health-custom'),
+  healthCounter: document.getElementById('health-counter'),
+  alcoholOptions: document.getElementById('alcohol-options'),
+  alcoholWarning: document.getElementById('alcohol-warning'),
+  uniformSection: document.getElementById('uniform-section'),
+  healthSection: document.getElementById('health-section'),
+  alcoholSection: document.getElementById('alcohol-section'),
+  interiorSection: document.getElementById('interior-section'),
+  exteriorSection: document.getElementById('exterior-section'),
+  reviewSection: document.getElementById('review-section'),
+  uniformContinue: document.getElementById('uniform-continue'),
+  healthContinue: document.getElementById('health-continue'),
+  healthChipReset: document.getElementById('health-chip-reset'),
+  alcoholContinue: document.getElementById('alcohol-continue'),
+  interiorContinue: document.getElementById('interior-continue'),
+  exteriorContinue: document.getElementById('exterior-continue'),
+  flowPrevRow: document.getElementById('flow-prev-row'),
+  flowSubmitRow: document.getElementById('flow-submit-row'),
+  vehicleChecks: document.getElementById('vehicle-checks'),
+  exteriorChecks: document.getElementById('exterior-checks'),
+  exteriorAlert: document.getElementById('exterior-alert'),
+  reviewList: document.getElementById('review-list'),
+  submitBtn: document.getElementById('submit-btn'),
+  resultCard: document.getElementById('result-card'),
+  doneAlert: document.getElementById('done-alert'),
+  doneHomeBtn: document.getElementById('done-home-btn')
+};
+
+// ======== 노선별 차량번호 리스트(구글 시트 연동) ========
+let PLATE_LISTS = {};
+let plateDataLoaded = false;
+let plateDataError = false;
+let plateDataLoading = false;
+
+// 차량번호 데이터를 지연 로딩 (차량번호 페이지에 도달할 때만 로드)
+function loadPlateData() { /* 체험 모드는 외부 차량 데이터를 요청하지 않습니다. */ }
+
+// ======== 공통 UI ========
+let toastTimer;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+function createOption(value, label = value, className = 'option-tile compact') {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = className;
+  button.dataset.value = value;
+  button.textContent = label;
+  button.setAttribute('aria-pressed', 'false');
+  return button;
+}
+
+function markSelected(container, value) {
+  container.querySelectorAll('[data-value]').forEach((option) => {
+    const selected = option.dataset.value === value;
+    option.classList.toggle('selected', selected);
+    option.setAttribute('aria-pressed', String(selected));
+  });
+}
+
+function onOptionClick(container, handler) {
+  container.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-value]');
+    if (option && container.contains(option)) handler(option.dataset.value);
+  });
+}
+
+function updateCounter(input, counter) {
+  counter.textContent = `${input.value.length} / 100`;
+}
+
+function focusLater(input) {
+  setTimeout(() => {
+    input.focus({ preventScroll: true });
+    const box = input.closest('.problem-box') || input;
+    const top = box.getBoundingClientRect().top + window.scrollY - 76;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, 150);
+}
+
+function formatBusNo(busNo) {
+  return busNo.replace(/^(\d+)/, '$1번');
+}
+
+function getHealthDetail() {
+  return state.healthOption === '기타' ? state.healthCustom.trim() : state.healthOption;
+}
+
+// ======== 화면 전환 ========
+function showPage(pageId, { push = true, direction = 'forward' } = {}) {
+  const target = document.getElementById(pageId);
+  if (!target) return;
+
+  document.querySelectorAll('.page').forEach((page) => {
+    page.classList.remove('active', 'enter-forward', 'enter-back');
+  });
+  target.classList.add('active', direction === 'back' ? 'enter-back' : 'enter-forward');
+  document.body.dataset.tone = target.dataset.tone || 'white';
+
+  updateNav(target);
+  renderPage(pageId);
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+  if (push) history.pushState({ page: pageId, session }, '', '');
+}
+
+function updateNav(page) {
+  const stepIndex = STEP_PAGES.indexOf(page.id);
+  let progress = null;
+  if (stepIndex >= 0) progress = (stepIndex + 1) / (STEP_PAGES.length + 1);
+  else if (page.id === 'p-review') progress = 1;
+
+  if (typeof setNav === 'function') {
+    setNav({ mode: page.dataset.nav || 'back', progress });
+  }
+}
+
+function renderPage(pageId) {
+  if (pageId === 'p-landing') renderGreeting();
+  if (pageId === 'p-driver-name') syncDriverName();
+  if (pageId === 'p0') {
+    renderBusNoOptions();
+    loadPlateData();
+    renderPlates();
+  }
+  if (pageId === 'p-review') renderReview();
+  if (STEP_PAGES.includes(pageId)) {
+    renderSummary(pageId);
+    syncStep(pageId);
+    updateCta(pageId);
+  }
+}
+
+function atFlowStart() {
+  return currentFlowIndex() <= 0 && window.scrollY <= 48;
+}
+
+function stepFlowBack() {
+  const prev = FLOW_STEPS[Math.max(2, currentFlowIndex() - 1)];
+  setFlowChrome(prev.step);
+  scrollSectionIntoView(document.getElementById(prev.id));
+}
+
+function navigateBack() {
+  const onFlow = document.getElementById('p0')?.classList.contains('active');
+  if (!onFlow) {
+    history.back();
+    return;
+  }
+  if (atFlowStart()) {
+    history.back();
+    return;
+  }
+  stepFlowBack();
+}
+
+// 처음 화면으로 이동하는 함수 (상단 로고)
+function goToInitialPage() {
+  startCheck();
+}
+
+function startCheck() {
+  session += 1;
+  submitted = false;
+  editDepth = 0;
+  releaseVehiclePhotos();
+  Object.assign(state, createEmptyState(), { site: '정관', busNo: '106', plate: '체험용 차량' });
+  dom.plateFilter.value = '';
+  showPage('p0', { push: false });
+  history.replaceState({ page: 'p0', session }, '', '');
+  advance('uniform');
+}
+
+window.addEventListener('popstate', (event) => {
+  const onFlow = document.getElementById('p0')?.classList.contains('active');
+  if (onFlow && !atFlowStart()) {
+    history.pushState({ page: 'p0', session }, '', '');
+    stepFlowBack();
+    return;
+  }
+
+  const { page = 'p-landing', session: entrySession } = event.state || {};
+  if (editDepth > 0) editDepth -= 1;
+
+  // 제출이 끝났거나 이전 점검의 화면이면 메인으로 보낸다
+  const staleFlow = FLOW_PAGES.includes(page) && (entrySession !== session || submitted);
+  if (staleFlow) {
+    showPage('p-landing', { push: false, direction: 'back' });
+    history.replaceState({ page: 'p-landing', session }, '', '');
+    return;
+  }
+  showPage(page, { push: false, direction: 'back' });
+});
+
+// ======== 메인 화면 ========
+function renderGreeting() {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const date = String(today.getDate()).padStart(2, '0');
+  const weekday = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][today.getDay()];
+  dom.landingDate.textContent = `${today.getFullYear()}년 ${month}월 ${date}일 ${weekday}`;
+
+  const name = getDriverName();
+  dom.landingHello.replaceChildren('안녕하세요,', document.createElement('br'), name ? `${name} 기사님` : '기사님');
+}
+
+function openNotice(notice) {
+  const viewer = document.getElementById('notice-viewer');
+  document.getElementById('notice-viewer-title').textContent = notice.title;
+  const body = document.getElementById('notice-viewer-body');
+  body.replaceChildren(...notice.images.map((src) => {
+    const image = document.createElement('img');
+    image.src = src;
+    image.alt = notice.title;
+    image.decoding = 'async';
+    return image;
+  }));
+  body.scrollTop = 0;
+  viewer.hidden = false;
+  document.body.classList.add('no-scroll');
+  document.getElementById('notice-viewer-close').focus();
+}
+
+function closeNotice() {
+  const viewer = document.getElementById('notice-viewer');
+  if (viewer.hidden) return;
+  viewer.hidden = true;
+  document.getElementById('notice-viewer-body').replaceChildren();
+  document.body.classList.remove('no-scroll');
+}
+
+function createNoticeRow(notice) {
+  const item = document.createElement('li');
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'list-row';
+  button.innerHTML = `<span class="list-row-icon">${ICONS.document}</span><span class="list-row-text"></span><span class="list-row-arrow">${ICONS.chevronRight}</span>`;
+  button.querySelector('.list-row-text').textContent = notice.title;
+  button.addEventListener('click', () => openNotice(notice));
+  item.appendChild(button);
+  return item;
+}
+
+function initNotices() {
+  document.getElementById('landing-notice-list').replaceChildren(...NOTICES.slice(0, 2).map(createNoticeRow));
+  document.getElementById('board-notice-list').replaceChildren(...NOTICES.map(createNoticeRow));
+  document.getElementById('notice-board-open').addEventListener('click', () => showPage('p-board'));
+  document.getElementById('notice-viewer-close').addEventListener('click', closeNotice);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeNotice();
+  });
+}
+
+// ======== 기사님 이름 ========
+function syncDriverName() {
+  dom.driverNameInput.value = getDriverName();
+  dom.driverNameSubmit.disabled = !dom.driverNameInput.value.trim();
+}
+
+function initDriverName() {
+  dom.driverNameInput.addEventListener('input', () => {
+    dom.driverNameSubmit.disabled = !dom.driverNameInput.value.trim();
+  });
+  dom.driverNameInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !dom.driverNameSubmit.disabled) dom.driverNameSubmit.click();
+  });
+  dom.driverNameSubmit.addEventListener('click', () => {
+    if (!saveDriverName(dom.driverNameInput.value)) return;
+    dom.driverNameInput.blur();
+    if (editDepth > 0) {
+      returnToReview();
+      return;
+    }
+    showPage('p0');
+  });
+}
+
+// ======== 점검 단계 ========
+const stepRules = {
+  p0: () => Boolean(state.site),
+  p1: () => Boolean(state.busNo && state.plate),
+  p3: () => state.uniform === 'ok' || (state.uniform === 'bad' && Boolean(state.uniformReason.trim())),
+  p4: () => state.health === 'ok' || (state.health === 'symptom' && Boolean(getHealthDetail())),
+  p5: () => Boolean(state.alcohol),
+  p6: () => problemListComplete(VEHICLE_ITEMS, state.vehicle),
+  p7: () => problemListComplete(EXTERIOR_ITEMS, state.exterior)
+};
+
+function problemListComplete(items, bucket) {
+  return items.every((item) => {
+    const row = bucket[item.id];
+    return row.status === 'ok' || (row.status === 'bad' && Boolean(row.note.trim()));
+  });
+}
+
+function problemItems(items, bucket) {
+  return items.filter((item) => bucket[item.id].status === 'bad');
+}
+
+function vehicleProblems() {
+  return problemItems(VEHICLE_ITEMS, state.vehicle);
+}
+
+function exteriorProblems() {
+  return problemItems(EXTERIOR_ITEMS, state.exterior);
+}
+
+function updateCta(pageId) {
+  const button = document.querySelector(`#${pageId} [data-next]`);
+  if (button) button.disabled = !stepRules[pageId]();
+}
+
+function renderSummary(pageId) {
+  const container = document.querySelector(`#${pageId} [data-summary]`);
+  if (!container) return;
+  const index = STEP_PAGES.indexOf(pageId);
+  const items = [];
+  if (index > 0 && state.site) items.push(state.site);
+  if (index > 1 && state.busNo) items.push(formatBusNo(state.busNo));
+  if (index > 1 && state.plate) items.push(state.plate);
+  container.replaceChildren(...items.map((text) => {
+    const chip = document.createElement('span');
+    chip.className = 'summary-chip';
+    chip.textContent = text;
+    return chip;
+  }));
+}
+
+const OPEN_ORDER = ['uniform', 'health', 'alcohol', 'interior', 'exterior', 'review'];
+const FLOW_STEPS = [
+  { id: 'site-head', step: 1 },
+  { id: 'route-section', step: 2 },
+  { id: 'uniform-section', step: 3 },
+  { id: 'health-section', step: 4 },
+  { id: 'alcohol-section', step: 5 },
+  { id: 'interior-section', step: 6 },
+  { id: 'exterior-section', step: 7 },
+  { id: 'review-section', step: 8 }
+];
+const ADVANCE = {
+  uniform: { step: 3, section: 'uniformSection' },
+  health: { step: 4, section: 'healthSection' },
+  alcohol: { step: 5, section: 'alcoholSection' },
+  interior: { step: 6, section: 'interiorSection' },
+  exterior: { step: 7, section: 'exteriorSection' },
+  review: { step: 8, section: 'reviewSection' }
+};
+
+function resetOpenedFrom(name) {
+  const start = OPEN_ORDER.indexOf(name);
+  if (start < 0) return;
+  OPEN_ORDER.slice(start).forEach((key) => { state.opened[key] = false; });
+}
+
+function refreshGates() {
+  if (!problemListComplete(VEHICLE_ITEMS, state.vehicle)) resetOpenedFrom('exterior');
+  if (!problemListComplete(EXTERIOR_ITEMS, state.exterior)) state.opened.review = false;
+  dom.routeSection.hidden = !state.site;
+  dom.plateSection.hidden = !state.busNo;
+  dom.uniformSection.hidden = !state.opened.uniform;
+  dom.healthSection.hidden = !state.opened.health;
+  dom.alcoholSection.hidden = !state.opened.alcohol;
+  dom.interiorSection.hidden = !state.opened.interior;
+  dom.exteriorSection.hidden = !state.opened.exterior;
+  dom.reviewSection.hidden = !state.opened.review;
+  dom.uniformContinue.hidden = !(state.uniform === 'bad' && state.uniformReason.trim());
+  dom.healthContinue.hidden = !(state.health === 'symptom' && state.healthOption === '기타' && state.healthCustom.trim());
+  dom.alcoholContinue.hidden = state.alcohol !== 'yes';
+  dom.interiorContinue.hidden = !problemListComplete(VEHICLE_ITEMS, state.vehicle);
+  dom.exteriorContinue.hidden = !problemListComplete(EXTERIOR_ITEMS, state.exterior);
+}
+
+function syncStep(pageId) {
+  if (pageId !== 'p0') return;
+  markSelected(dom.siteOptions, state.site);
+  if (state.site) markSelected(dom.busnoOptions, state.busNo);
+  if (state.busNo) markPlates();
+  markSelected(dom.uniformOptions, state.uniform);
+  dom.uniformReasonWrap.hidden = state.uniform !== 'bad';
+  if (document.activeElement !== dom.reasonInput) dom.reasonInput.value = state.uniformReason;
+  updateCounter(dom.reasonInput, dom.reasonCounter);
+  markSelected(dom.healthOptions, state.health);
+  dom.healthDetailWrap.hidden = state.health !== 'symptom';
+  markSelected(dom.healthChips, state.healthOption);
+  dom.healthChips.hidden = state.healthOption === '기타';
+  if (dom.healthDetailLabel) dom.healthDetailLabel.hidden = state.healthOption === '기타';
+  dom.healthCustomWrap.hidden = state.healthOption !== '기타';
+  if (document.activeElement !== dom.healthCustom) dom.healthCustom.value = state.healthCustom;
+  updateCounter(dom.healthCustom, dom.healthCounter);
+  markSelected(dom.alcoholOptions, state.alcohol);
+  dom.alcoholWarning.hidden = state.alcohol !== 'yes';
+  syncProblemList(dom.vehicleChecks, VEHICLE_ITEMS, state.vehicle);
+  syncProblemList(dom.exteriorChecks, EXTERIOR_ITEMS, state.exterior);
+  updateExteriorAlert();
+  refreshGates();
+}
+
+function syncProblemList(root, items, bucket) {
+  items.forEach((item) => {
+    const group = root.querySelector(`[data-check="${item.id}"]`);
+    const row = bucket[item.id];
+    markSelected(group, row.status);
+    group.querySelector('.reveal').hidden = row.status !== 'bad';
+    const input = group.querySelector('[data-note]');
+    if (document.activeElement !== input) input.value = row.note;
+    group.querySelector('.field-counter').textContent = `${input.value.length} / 100`;
+    const preview = group.querySelector('[data-photo-preview]');
+    const image = preview.querySelector('img');
+    preview.hidden = !row.photoUrl;
+    if (row.photoUrl) image.src = row.photoUrl;
+    else image.removeAttribute('src');
+  });
+}
+
+function updateExteriorAlert() {
+  const problems = exteriorProblems();
+  dom.exteriorAlert.hidden = problems.length === 0;
+  const accident = state.exterior.accident.status === 'bad';
+  document.getElementById('exterior-alert-title').textContent = accident
+    ? '사고 흔적을 촬영하고 운행관리실로 연락해 주세요'
+    : '운행관리실로 연락해 주세요';
+  document.getElementById('exterior-alert-desc').textContent = accident
+    ? '사고 흔적이 있으면 사진을 찍은 뒤 운행관리실에 알려 주세요.'
+    : '불량 사유가 있으면 적은 뒤 운행관리실에 알려 주세요.';
+}
+
+function renderBusNoOptions() {
+  const list = BUSNO_LIST[state.site] || [];
+  dom.busnoOptions.replaceChildren(...list.map((busNo) => createOption(busNo, formatBusNo(busNo))));
+}
+
+function renderPlates() {
+  const filter = dom.plateFilter.value;
+  const plates = filter ? HARDCODED_PLATE_NUMBERS.filter((num) => num.includes(filter)) : HARDCODED_PLATE_NUMBERS;
+  dom.plateGrid.replaceChildren(...plates.map((num) => createOption(num)));
+  dom.plateAllLabel.textContent = filter ? '검색 결과' : '전체 차량';
+  dom.plateAllLabel.hidden = plates.length === 0;
+  dom.plateEmpty.hidden = plates.length > 0;
+
+  const recent = getLastPlate();
+  const showRecent = !filter && HARDCODED_PLATE_NUMBERS.includes(recent);
+  dom.plateRecent.hidden = !showRecent;
+  dom.plateRecentGrid.replaceChildren(...(showRecent ? [createOption(recent)] : []));
+  markPlates();
+}
+
+function markPlates() {
+  markSelected(dom.plateGrid, state.plate);
+  markSelected(dom.plateRecentGrid, state.plate);
+}
+
+function scrollSectionIntoView(section) {
+  window.setTimeout(() => {
+    const top = section.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(document.body).getPropertyValue('--nav-height')) - 12;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, 40);
+}
+
+function scrollPlateSectionIntoView() {
+  scrollSectionIntoView(dom.plateSection);
+}
+
+function setFlowChrome(stepNumber) {
+  const review = stepNumber >= 8;
+  if (dom.flowPrevRow) dom.flowPrevRow.hidden = review;
+  if (dom.flowSubmitRow) dom.flowSubmitRow.hidden = !review;
+  if (typeof setNav === 'function') {
+    setNav({ mode: 'back', progress: review ? 1 : stepNumber / 8 });
+  }
+  const container = document.querySelector('#p0 [data-summary]');
+  if (!container) return;
+  const items = [];
+  if (stepNumber > 1 && state.site) items.push(state.site);
+  if (stepNumber > 2 && state.busNo) items.push(formatBusNo(state.busNo));
+  if (stepNumber > 2 && state.plate) items.push(state.plate);
+  container.replaceChildren(...items.map((text) => {
+    const chip = document.createElement('span');
+    chip.className = 'summary-chip';
+    chip.textContent = text;
+    return chip;
+  }));
+}
+
+function advance(name) {
+  const spec = ADVANCE[name];
+  state.opened[name] = true;
+  syncStep('p0');
+  setFlowChrome(spec.step);
+  scrollSectionIntoView(dom[spec.section]);
+  if (name === 'review') renderReview();
+}
+
+function currentFlowIndex() {
+  let index = 0;
+  FLOW_STEPS.forEach((step, i) => {
+    const el = document.getElementById(step.id);
+    if (!el || el.hidden) return;
+    if (el.getBoundingClientRect().top <= 80) index = i;
+  });
+  return index;
+}
+
+function goNext(pageId) {
+  if (!stepRules[pageId]()) return;
+
+  if (editDepth > 0) {
+    // 근무지를 바꾸면 노선도 다시 골라야 한다
+    if (pageId === 'p0' && !state.busNo) {
+      editDepth += 1;
+      setFlowChrome(2);
+      scrollSectionIntoView(dom.routeSection);
+      return;
+    }
+    returnToReview();
+    return;
+  }
+  const index = STEP_PAGES.indexOf(pageId);
+  showPage(STEP_PAGES[index + 1] || 'p-review');
+}
+
+function bindProblemList(root, bucketName, pageId) {
+  root.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-item][data-value]');
+    if (!option || !root.contains(option)) return;
+    const { item, value } = option.dataset;
+    const row = state[bucketName][item];
+    row.status = value;
+    if (value === 'ok' && row.photoUrl) {
+      URL.revokeObjectURL(row.photoUrl);
+      row.photo = null;
+      row.photoUrl = '';
+    }
+    syncStep(pageId);
+    updateCta(pageId);
+    if (value === 'bad') focusLater(root.querySelector(`[data-note="${item}"]`));
+  });
+  root.addEventListener('input', (event) => {
+    const input = event.target.closest('[data-note]');
+    if (!input) return;
+    state[bucketName][input.dataset.note].note = input.value;
+    input.parentElement.querySelector('.field-counter').textContent = `${input.value.length} / 100`;
+    refreshGates();
+  });
+  root.addEventListener('change', async (event) => {
+    const input = event.target.closest('[data-photo]');
+    if (!input || !input.files || !input.files[0]) return;
+    const source = input.files[0];
+    input.value = '';
+    try {
+      const photo = await compressPhoto(source);
+      const row = state[bucketName][input.dataset.photo];
+      if (row.photoUrl) URL.revokeObjectURL(row.photoUrl);
+      row.photo = photo;
+      row.photoUrl = URL.createObjectURL(photo);
+      syncStep(pageId);
+      const kb = Math.max(1, Math.round(photo.size / 1024));
+      showToast(`사진을 줄여 등록했어요. ${kb}KB`);
+    } catch (error) {
+      console.error('사진 준비 실패:', error);
+      showToast('사진을 준비하지 못했어요. 다시 찍어 주세요.');
+    }
+  });
+  root.addEventListener('click', (event) => {
+    const clear = event.target.closest('[data-photo-clear]');
+    if (!clear || !root.contains(clear)) return;
+    const row = state[bucketName][clear.dataset.photoClear];
+    if (row.photoUrl) URL.revokeObjectURL(row.photoUrl);
+    row.photo = null;
+    row.photoUrl = '';
+    syncStep(pageId);
+  });
+}
+
+function initSteps() {
+  onOptionClick(dom.siteOptions, (value) => {
+    const opening = dom.routeSection.hidden || state.site !== value;
+    if (state.site !== value) {
+      state.busNo = '';
+      resetOpenedFrom('uniform');
+    }
+    state.site = value;
+    renderBusNoOptions();
+    syncStep('p0');
+    setFlowChrome(2);
+    if (opening) scrollSectionIntoView(dom.routeSection);
+  });
+
+  onOptionClick(dom.busnoOptions, (value) => {
+    const opening = dom.plateSection.hidden;
+    state.busNo = value;
+    syncStep('p0');
+    if (opening) scrollPlateSectionIntoView();
+  });
+
+  [dom.plateGrid, dom.plateRecentGrid].forEach((grid) => {
+    onOptionClick(grid, (value) => {
+      state.plate = value;
+      markPlates();
+      advance('uniform');
+    });
+  });
+  dom.plateFilter.addEventListener('input', () => {
+    const digits = dom.plateFilter.value.replace(/\D/g, '').slice(0, 4);
+    if (digits !== dom.plateFilter.value) dom.plateFilter.value = digits;
+    renderPlates();
+  });
+
+  onOptionClick(dom.uniformOptions, (value) => {
+    state.uniform = value;
+    if (value === 'ok') {
+      advance('health');
+      return;
+    }
+    resetOpenedFrom('health');
+    syncStep('p0');
+    scrollSectionIntoView(dom.uniformReasonWrap);
+    focusLater(dom.reasonInput);
+  });
+  dom.reasonInput.addEventListener('input', () => {
+    state.uniformReason = dom.reasonInput.value;
+    updateCounter(dom.reasonInput, dom.reasonCounter);
+    refreshGates();
+  });
+  dom.uniformContinue.addEventListener('click', () => {
+    if (state.uniformReason.trim()) advance('health');
+  });
+
+  onOptionClick(dom.healthOptions, (value) => {
+    state.health = value;
+    if (value === 'ok') {
+      advance('alcohol');
+      return;
+    }
+    resetOpenedFrom('alcohol');
+    syncStep('p0');
+    scrollSectionIntoView(dom.healthDetailWrap);
+  });
+  onOptionClick(dom.healthChips, (value) => {
+    state.healthOption = value;
+    if (value === '기타') {
+      resetOpenedFrom('alcohol');
+      syncStep('p0');
+      focusLater(dom.healthCustom);
+      return;
+    }
+    advance('alcohol');
+  });
+  dom.healthCustom.addEventListener('input', () => {
+    state.healthCustom = dom.healthCustom.value;
+    updateCounter(dom.healthCustom, dom.healthCounter);
+    refreshGates();
+  });
+  dom.healthContinue.addEventListener('click', () => {
+    if (state.healthCustom.trim()) advance('alcohol');
+  });
+  dom.healthChipReset.addEventListener('click', () => {
+    state.healthOption = '';
+    resetOpenedFrom('alcohol');
+    syncStep('p0');
+  });
+
+  onOptionClick(dom.alcoholOptions, (value) => {
+    state.alcohol = value;
+    if (value === 'no') {
+      advance('interior');
+      return;
+    }
+    resetOpenedFrom('interior');
+    syncStep('p0');
+    scrollSectionIntoView(dom.alcoholWarning);
+  });
+  dom.alcoholContinue.addEventListener('click', () => advance('interior'));
+
+  bindProblemList(dom.vehicleChecks, 'vehicle', 'p0');
+  bindProblemList(dom.exteriorChecks, 'exterior', 'p0');
+  dom.interiorContinue.addEventListener('click', () => {
+    if (problemListComplete(VEHICLE_ITEMS, state.vehicle)) advance('exterior');
+  });
+  dom.exteriorContinue.addEventListener('click', () => {
+    if (problemListComplete(EXTERIOR_ITEMS, state.exterior)) advance('review');
+  });
+
+  document.querySelectorAll('[data-next]').forEach((button) => {
+    button.addEventListener('click', () => goNext(button.closest('.page').id));
+  });
+
+  document.querySelectorAll('[data-prev]').forEach((button) => {
+    button.addEventListener('click', () => navigateBack());
+  });
+}
+
+// ======== 제출 전 확인 ========
+function startEdit(pageId, anchor) {
+  if (['p-driver-name', 'p0', 'p1'].includes(pageId)) {
+    showToast('체험용 기본정보입니다. 복장 단계부터 진행해 주세요.');
+    return;
+  }
+  editDepth = 1;
+  const targetId = anchor || { p3: 'uniform-section', p4: 'health-section', p5: 'alcohol-section', p6: 'interior-section', p7: 'exterior-section' }[pageId];
+  if (targetId) {
+    showPage('p0');
+    window.setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      scrollSectionIntoView(el);
+      const step = FLOW_STEPS.find((item) => item.id === targetId);
+      if (step) setFlowChrome(step.step);
+    }, 60);
+    return;
+  }
+  showPage(pageId);
+}
+
+function returnToReview() {
+  const depth = editDepth;
+  editDepth = 0;
+  history.go(-depth);
+}
+
+function renderReview() {
+  const rows = [
+    { label: '기사님', value: getDriverName(), page: 'p-driver-name' },
+    { label: '근무지', value: state.site, page: 'p0', anchor: 'site-head' },
+    { label: '노선', value: formatBusNo(state.busNo), page: 'p0', anchor: 'route-section' },
+    { label: '차량번호', value: state.plate, page: 'p0', anchor: 'plate-section' },
+    {
+      label: '복장 상태',
+      value: state.uniform === 'bad' ? '불량' : '양호',
+      detail: state.uniform === 'bad' ? state.uniformReason.trim() : '',
+      warn: state.uniform === 'bad',
+      page: 'p3'
+    },
+    {
+      label: '건강 상태',
+      value: state.health === 'symptom' ? '증상 있음' : '양호',
+      detail: state.health === 'symptom' ? getHealthDetail() : '',
+      warn: state.health === 'symptom',
+      page: 'p4'
+    },
+    {
+      label: '24시간 이내 음주',
+      value: state.alcohol === 'yes' ? '예' : '아니요',
+      warn: state.alcohol === 'yes',
+      page: 'p5'
+    },
+    {
+      label: '차량 내부',
+      value: vehicleProblems().length ? `문제 ${vehicleProblems().length}건` : '문제 없음',
+      detail: problemDetail(VEHICLE_ITEMS, state.vehicle),
+      warn: vehicleProblems().length > 0,
+      page: 'p6'
+    },
+    {
+      label: '차량 외부',
+      value: exteriorProblems().length ? `문제 ${exteriorProblems().length}건` : '문제 없음',
+      detail: problemDetail(EXTERIOR_ITEMS, state.exterior),
+      warn: exteriorProblems().length > 0,
+      page: 'p7'
+    }
+  ];
+  dom.reviewList.replaceChildren(...rows.map(createReviewRow));
+}
+
+function problemDetail(items, bucket) {
+  return problemItems(items, bucket).map((item) => {
+    const row = bucket[item.id];
+    return `${item.label}: ${row.note.trim()}${row.photo ? ' · 사진 있음' : ''}`;
+  }).join('\n');
+}
+
+function appendProblemFields(formData, prefix, items, bucket) {
+  items.forEach((item) => {
+    const row = bucket[item.id];
+    formData.append(`${prefix}_${item.id}`, row.status);
+    if (row.status === 'bad') {
+      formData.append(`${prefix}_${item.id}_note`, row.note.trim());
+      if (row.photo) formData.append(`${prefix}_${item.id}_photo`, row.photo, `${prefix}_${item.id}.jpg`);
+    }
+  });
+}
+
+function createReviewRow({ label, value, detail, warn, page, anchor }) {
+  const item = document.createElement('li');
+  item.className = 'review-row';
+
+  const main = document.createElement('div');
+  main.className = 'review-main';
+  const labelEl = document.createElement('span');
+  labelEl.className = 'review-label';
+  labelEl.textContent = label;
+  const valueEl = document.createElement('span');
+  valueEl.className = warn ? 'review-value warn' : 'review-value';
+  valueEl.textContent = value;
+  main.append(labelEl, valueEl);
+  if (detail) {
+    const detailEl = document.createElement('span');
+    detailEl.className = 'review-detail';
+    detailEl.textContent = detail;
+    main.appendChild(detailEl);
+  }
+
+  const edit = document.createElement('button');
+  edit.type = 'button';
+  edit.className = 'text-btn';
+  edit.textContent = '수정';
+  edit.setAttribute('aria-label', `${label} 수정`);
+  edit.addEventListener('click', () => startEdit(page, anchor));
+
+  item.append(main, edit);
+  return item;
+}
+
+// ======== 제출 ========
+async function handleSubmit() {
+  const button = dom.submitBtn;
+  button.classList.add('is-loading');
+  button.disabled = true;
+  button.setAttribute('aria-busy', 'true');
+  try {
+    await submitData();
+    submitted = true;
+    renderDone();
+    showPage('done', { push: false });
+    history.replaceState({ page: 'done', session }, '', '');
+  } catch (error) {
+    console.error('제출 실패:', error);
+    showToast('제출하지 못했어요. 잠시 후 다시 시도해 주세요.');
+  } finally {
+    button.classList.remove('is-loading');
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+  }
+}
+
+async function submitData() { return { demo: true }; }
+
+function renderDone() {
+  const time = new Intl.DateTimeFormat('ko-KR', { hour: '2-digit', minute: '2-digit' }).format(new Date());
+  const rows = [
+    ['체험 완료 시각', time],
+    ['노선', formatBusNo(state.busNo)],
+    ['차량번호', state.plate],
+    ['차량 내부', vehicleProblems().length ? `문제 ${vehicleProblems().length}건` : '문제 없음'],
+    ['차량 외부', exteriorProblems().length ? `문제 ${exteriorProblems().length}건` : '문제 없음']
+  ];
+  dom.resultCard.replaceChildren(...rows.map(([term, description]) => {
+    const row = document.createElement('div');
+    const dt = document.createElement('dt');
+    dt.textContent = term;
+    const dd = document.createElement('dd');
+    dd.textContent = description;
+    row.append(dt, dd);
+    return row;
+  }));
+  dom.doneAlert.hidden = state.alcohol !== 'yes';
+}
+
+function finishAndGoHome() { startCheck(); }
+
+// ======== 스플래시 ========
+function initSplash() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+
+  const hideSplash = () => {
+    splash.classList.add('fade-out');
+    splash.addEventListener('animationend', () => {
+      splash.style.display = 'none';
+    }, { once: true });
+  };
+
+  if (!SPLASH_DEBUG_HOLD) {
+    setTimeout(hideSplash, SPLASH_AUTO_HIDE_DELAY);
+  }
+
+  // 탭하여 즉시 닫기
+  splash.addEventListener('click', hideSplash, { once: true });
+}
+
+// ======== 초기화 ========
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof initHeader === 'function') initHeader();
+  initSplash();
+  initNotices();
+  initDriverName();
+  initSteps();
+
+  dom.landingStartBtn.addEventListener('click', startCheck);
+  dom.submitBtn.addEventListener('click', handleSubmit);
+  dom.doneHomeBtn.addEventListener('click', finishAndGoHome);
+
+  startCheck();
+  console.log('운행전 자가점검시스템이 로드되었습니다.');
+});
+
+// ======== 오프라인 지원 ========
+window.addEventListener('online', () => {
+  console.log('네트워크 연결이 복구되었습니다.');
+});
+window.addEventListener('offline', () => {
+  console.log('네트워크 연결이 끊어졌습니다.');
+  showToast('인터넷 연결을 확인해 주세요.');
+});
+</script>
+</body>
+</html>
